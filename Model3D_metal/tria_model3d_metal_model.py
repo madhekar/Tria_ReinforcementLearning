@@ -18,99 +18,15 @@ from stable_baselines3.common.evaluation import evaluate_policy
 
 env_name = 'tria-3d-rl-model-'
 
-t_ini= 70.0; h_ini= 40.0; a_ini= 10.0 
-
-t_min =-40.0; t_max=110; h_min=0.0; h_max=100.0; a_min=0.0; a_max=5000.0
-
-act_state = 2
-
-stat_rand_min = -1.0; stat_rand_max = 1.0
-
-equilibrium_cycles= 60
-
-r1 = -0.25; r2 = -0.5; r3 = 2; nr3 = -2
-
-const_weight_vec  = [1, 1, 1, 1]
-
-d3 = {
-     0 : [65.0, 80.0, 50.0, 85.0, 40.0, 90.0], 
-     1 : [30.0, 50.0, 20.0, 60.0, 10.0, 70.0], 
-     2 : [0.0, 19.0, 200.0, 599.0, 600.0, 2000.0]
-    }
-
-d1 = {0: [65.0, 80.0], 1: [30.0, 50.0], 2: [0.0, 20.0]}
-
 ppo_model_timesteps= 200000; neural_model_timesteps=200000; a2c_model_timesteps=200000
 
 ppo_model_name = env_name + 'ppo'; neural_model_name = env_name + 'ppo-neural'; a2c_model_name = env_name + 'a2c'
 
-''' * * * gym tria environment class difination * * * '''
-class TriaEnv(Env):
-    
-    def __init__(self):
-        self.action_space = MultiDiscrete(np.array([act_state, act_state, act_state, act_state, act_state]))
-        
-
-        low = np.array([t_min, h_min, a_min]).astype(np.float32)
-        high = np.array([t_max, h_max, a_max]).astype(np.float32)
-
-        self.observation_space = Box(low, high, shape=(3,))
-        
-        self.state = [t_ini + random.uniform(stat_rand_min, stat_rand_max), h_ini + random.uniform(stat_rand_min, stat_rand_max), a_ini + random.uniform(stat_rand_min, stat_rand_max)]
-        
-        #print('^^^', self.state, self.action_space)
-        
-        self.equilibrium_cycles_len = equilibrium_cycles
-        
-    def step(self, action):
-        
-        ap_scaled = [1 if e == 1 else -1 for e in action]  # 0 (off) => -1 and 1 (on) => 1
-        
-        actionPrime = [a * b for a, b in zip(ap_scaled, const_weight_vec)] 
-        
-        actionAlgo = [actionPrime[a] - actionPrime[len(actionPrime) -a -1] for a in range(len(actionPrime) // 2)]
-        
-        actionAlgo.append(actionPrime[len(actionPrime) // 2])                                                              
-        
-        #print('***',actionAlgo, self.state)
-        
-        self.state = [a + b for a, b in zip(actionAlgo, self.state)]
-        
-        #print('&&&', actionAlgo, self.state)
-        
-        #reduce tria simulation length by 1 second
-        self.equilibrium_cycles_len -= 1
-        
-        reward = [r3 if e >= d3[i][0] and e<= d3[i][1] else r2 if e >= d3[i][2] and e<= d3[i][3] else r1 if e >= d3[i][4] and e <= d3[i][5] else nr3 for i, e in enumerate(self.state)]
-        #reward = [r3 if e >= d1[i][0] and e <= d1[i][1] else nr3  for i, e in enumerate(self.state)]
-
-        reward = sum(reward)
-        #print('$$$', reward)
-            
-        if self.equilibrium_cycles_len <= 0:
-            terminated = True
-        else:
-            terminated = False
-            
-        info = {}
-        #print('reward:{} state:{}'.format(reward, self.state))
-        return self.state, reward, terminated,  info
-    
-    def render(self):
-        pass
-    
-    def reset(self):
-        
-        self.state =[t_ini + random.uniform(stat_rand_min, stat_rand_max), h_ini + random.uniform(stat_rand_min, stat_rand_max), a_ini + random.uniform(stat_rand_min, stat_rand_max)]
-        #print('@@@', self.state)
-        self.equilibrium_cycles_len = equilibrium_cycles
-        
-        return self.state
 
 ''' * * * gym tria environment instance * * * '''
 
-import gym_examples
-env = gym.make('gym_examples/TriaClimate-v0') #TriaEnv()
+import tria_rl
+env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
 
 print("1. Sample observation space: {}".format(env.observation_space.sample()))
 print("1. Sample observation space: {}".format(env.observation_space))
