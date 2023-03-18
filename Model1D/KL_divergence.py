@@ -8,7 +8,17 @@ def KL(a, b):
   return np.sum(np.where(a != 0, a * np.log(a / b), 0))
 
 
-values1 = [1.346112,1.337432,1.246655]
-values2 = [1.033836,1.082015,1.117323]
+def KL_optimized(a, b):
+     """ Epsilon is used here to avoid conditional code for checking that neither a nor b is equal to 0. """
+     epsilon = 0.00001
 
-print('KL Divergence value:', KL(values1, values2))
+     a = [_a+epsilon for _a in a]
+     b = [_b+epsilon for _b in b]
+
+     # You may want to instead make copies to avoid changing the np arrays.
+     a = np.asarray([_a + epsilon for _a in a], dtype=np.float64)
+     b = np.asarray([_b + epsilon for _b in b], dtype=np.float64)
+
+     divergence = np.sum(a*np.log(a/b))
+
+     return divergence
