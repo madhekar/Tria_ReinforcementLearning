@@ -99,7 +99,7 @@ def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
     }
     
 class TriaTrialEvalCallback(EvalCallback):
-    def __init__( self, eval_env: VecEnv, trial: optuna.Trial, n_eval_episodes: int = 5, eval_freq: int = 10000, deterministic: bool = True, verbose: int = 0 ): 
+    def __init__( self, eval_env: VecEnv, trial: optuna.Trial, n_eval_episodes: int = 50, eval_freq: int = 10000, deterministic: bool = True, verbose: int = 0 ): 
         super().__init__(eval_env= eval_env, n_eval_episodes= n_eval_episodes, eval_freq= eval_freq, deterministic= deterministic, verbose= verbose)
         self.trial = trial
         self.eval_idx = 0
