@@ -27,13 +27,14 @@ ppo_model_name = env_name + 'ppo'; neural_model_name = env_name + 'ppo-neural'; 
 
 import tria_rl
 env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
-
+print(env.metadata)
+print('------------------------------------------------------------------')
 print("1. Sample observation space: {}".format(env.observation_space.sample()))
 print("1. Sample observation space: {}".format(env.observation_space))
 print("1. Sample observation space: {}".format(env.observation_space.dtype))
 print("2. Sample action space     : {}".format(env.action_space.sample()))
 print("3. Sample state            : {}".format(env.state))    
-
+print('------------------------------------------------------------------')
 ''' * * * gym tria environment instance validation before model * * * '''
 episodes = 5
 for episode in range(1, episodes+1):
@@ -51,6 +52,7 @@ for episode in range(1, episodes+1):
         score += reward #[a + b for a, b in zip(reward, score)]
     print('Episode: {} Score: {}'.format(episode, score))
 env.close()
+print('------------------------------------------------------------------')
 
 ''' * * *  tria logging folders * * * '''
 log_path = os.path.join('train','log')
@@ -93,6 +95,8 @@ for episode in range(1, episodes+1):
     print('Model Name: {} Episone:{} Score:{}'.format( ppo_model_name, episode, score))
 env.close()  
 
+print('------------------------------------------------------------------')
+
 '''  *  Tria Custom Neural Network  * '''
 print('* * * Tria neural network model for tria 3D environment * * *')
 
@@ -114,6 +118,7 @@ evaluate_policy(nn_model, env, n_eval_episodes=20, render=False)
 
 env.close()
 
+
 print('* * * Tria neural network model for tria 3D environment predictions * * *')
 
 episodes=10
@@ -130,6 +135,7 @@ for episode in range(1, episodes+1):
 
 env.close()  
 
+print('------------------------------------------------------------------')
 
 '''  *  Tria A2C  Network  * '''
 print('* * * Tria A2C network model for tria 3D environment * * *')
@@ -167,5 +173,7 @@ for episode in range(1, episodes+1):
     print('Model Name: {} Episone:{} Score:{}'.format( a2c_model_name, episode, score))
 
 env.close() 
+
+print('------------------------------------------------------------------')
 
 #tensorboard --logdir './train/log/' --bind_all  # training_log_path

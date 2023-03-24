@@ -32,9 +32,9 @@ n_trials = 100
 
 n_jobs = 1
 
-n_startup_trials = 5
+n_startup_trials = 10
 
-n_evaluations = 2
+n_evaluations = 5
 
 n_timesteps = int(2e4)
 
@@ -48,7 +48,8 @@ timeout = int(60 * 15)
 
 delafult_hyperparams = {
     'policy' :  'MlpPolicy',
-    'env' : env_name
+    'env' : env_name,
+    'seed' : 1234
 }
 
 def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
@@ -56,10 +57,12 @@ def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
     gamma = 1.0 - trial.suggest_float("gamma", 0.0001, 0.1, log=True)
     
     max_grad_norm = trial.suggest_float("max_grad_norm", 0.3, 5.0, log=True)
+
+    vf_coef = trial.suggest_float("vf_coef", 0.001, 1, log=True)
     
     gae_lambda = 1.0 - trial.suggest_float("gae_lambda", 0.001, 0.2, log=True)
     
-    n_steps = 2 ** trial.suggest_int("exponent_n_steps", 3, 10)
+    n_steps = 2 ** trial.suggest_int("exponent_n_steps", 3, 10, log=True)
     
     learning_rate = trial.suggest_float("lr", 1e-5, 1, log=True)
     
@@ -67,9 +70,11 @@ def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
     
     ortho_init = trial.suggest_categorical("ortho_init", [False, True])
     
-    net_arch = trial.suggest_categorical("net_arch", ["tiny", "small"])
+    net_arch = trial.suggest_categorical("net_arch", ["tiny", "small", "mid", "large"])
     
-    activation_fn = trial.suggest_categorical("activation_fn", ["tanh", "relu"])
+    activation_fn = trial.suggest_categorical("activation_fn", ["tanh", "relu", "leakyRelu", "sigmoid"])
+
+    #learn_rate_schedule = trial.suggest_categorical('learn_rate_schedule',['constant','linear','double_linear_con','middle_drop','double_middle_drop'])
 
     # 
     trial.set_user_attr("gamma_", gamma)
@@ -79,10 +84,17 @@ def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
     trial.set_user_attr("n_steps", n_steps)
     
     #neural network selection choice
-    net_arch = {"pi": [64], "vf": [64]} if net_arch == "tiny" else {"pi": [64, 64], "vf": [64, 64]}
-    
+    if (net_arch == "tiny"): 
+        net_arch = {"pi": [64], "vf": [64]} 
+    elif net_arch == "small":
+        net_arch = {"pi": [64, 64], "vf": [64, 64]}
+    elif net_arch == "mid":
+        net_arch = {"pi":[64,64,64], "vf":[64,64,64]}
+    else:
+        net_arch = {"pi":[128,128,128,128], "vf":[128,128,128,128]}   
+     
     # activation / non-linearity selection 
-    activation_fn = {"tanh": nn.Tanh, "relu": nn.ReLU}[activation_fn]
+    activation_fn = {"tanh": nn.Tanh, "relu": nn.ReLU, "leakyRelu": nn.LeakyReLU, "sigmoid": nn.Sigmoid}[activation_fn]
     
     return {
         "n_steps": n_steps,
@@ -90,6 +102,7 @@ def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
         "gae_lambda": gae_lambda,
         "learning_rate": learning_rate,
         "ent_coef": ent_coef,
+        'vf_coef' : vf_coef,
         "max_grad_norm": max_grad_norm,
         "policy_kwargs": {
             "net_arch": net_arch,
@@ -160,10 +173,13 @@ def objective(trial: optuna.Trial) -> float:
 
     return eval_callback.last_mean_reward    
 
+print('startup trials: {} evaluations: {} trials: {}'.format(n_startup_trials, n_evaluations, n_trials))
+
 torch.set_num_threads(1)
 
 sampler = TPESampler(n_startup_trials=n_startup_trials)
     # Do not prune before 1/3 of the max budget is used
+
 pruner = MedianPruner(
         n_startup_trials=n_startup_trials, n_warmup_steps=n_evaluations // 3
     )
