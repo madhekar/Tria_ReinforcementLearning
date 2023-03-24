@@ -49,7 +49,8 @@ timeout = int(60 * 15)
 delafult_hyperparams = {
     'policy' :  'MlpPolicy',
     'env' : env_name,
-    'seed' : 1234
+    'seed' : 1234,
+    #'use_rms_prop' : True
 }
 
 def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
@@ -64,9 +65,11 @@ def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
     
     n_steps = 2 ** trial.suggest_int("exponent_n_steps", 3, 10, log=True)
     
-    learning_rate = trial.suggest_float("lr", 1e-5, 1, log=True)
+    learning_rate = trial.suggest_float("lr", 1e-9, 1, log=True)
     
     ent_coef = trial.suggest_float("ent_coef", 0.00000001, 0.1, log=True)
+
+    rms_prop_eps = trial.suggest_float('rms_prop_eps',1e-05, 1e-02, log=True )
     
     ortho_init = trial.suggest_categorical("ortho_init", [False, True])
     
@@ -103,6 +106,7 @@ def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
         "learning_rate": learning_rate,
         "ent_coef": ent_coef,
         'vf_coef' : vf_coef,
+        'rms_prop_eps': rms_prop_eps,
         "max_grad_norm": max_grad_norm,
         "policy_kwargs": {
             "net_arch": net_arch,
