@@ -57,16 +57,17 @@ env.close()
 
 print('* * * Tria A2C model for tria 3D environment predictions * * *')
 
-episodes=100
+episodes=5
 for episode in range(1, episodes+1):
     observation = env.reset()
     terminated = False
     score = 0
     while not terminated:
         #env.render()
-        action, _ = a2c_model.predict(observation)
+        action, _ = a2c_model.predict(observation, deterministic=True)
         observation, reward, terminated , info = env.step(action)
         score += reward
+        print('observation: {} action: {}'.format(observation, action));
     print('Model Name: {} Episone:{} Score:{}'.format( a2c_model_name, episode, score))
 
 env.close() 

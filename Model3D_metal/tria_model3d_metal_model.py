@@ -11,7 +11,7 @@ from gym.spaces import Discrete, Box, MultiDiscrete
 #import tensorflow as tf
 
 from stable_baselines3 import PPO
-from stable_baselines3.common.vec_env import DummyVecEnv
+from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.evaluation import evaluate_policy
 #load_ext tf.tensorboard
@@ -27,6 +27,9 @@ ppo_model_name = env_name + 'ppo'; neural_model_name = env_name + 'ppo-neural'; 
 
 import tria_rl
 env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
+env = DummyVecEnv([lambda: env])
+env = VecNormalize(env, norm_obs=True, norm_reward= False)
+
 print(env.metadata)
 print('------------------------------------------------------------------')
 print("1. Sample observation space: {}".format(env.observation_space.sample()))
@@ -62,6 +65,8 @@ print(log_path)
 print('* * * Tria PPO model for tria 3D environment * * *')
 
 env = DummyVecEnv([lambda: env])
+
+env = VecNormalize(env, norm_obs=True, norm_reward= False)
 
 #env = VecFrameStack(env, n_stack=4)
 ppo_model = PPO('MlpPolicy', env, verbose=1, tensorboard_log=log_path)

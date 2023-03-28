@@ -67,18 +67,18 @@ class stable_baselines.a2c.A2C(policy,
 '''
 print('* * * Tria A2C network model for tria 3D environment * * *')
 
-net_arch = {"pi": [64, 64], "vf": [64, 64]} #dict(pi=[128,128,128,128], vf=[128,128,128,128])
+net_arch = {'pi':[128,128,128,128], 'vf':[128,128,128,128]} #{"pi": [64, 64], "vf": [64, 64]} #dict(pi=[128,128,128,128], vf=[128,128,128,128])
 
 activation_fn=th.nn.LeakyReLU
 
 a2c_model = A2C("MlpPolicy", 
                 env, 
                 verbose=1, 
-                learning_rate= 4.5050195317802267e-07, #0.0004833166401413716, 
-                gamma=0.00014695028968659315, #0.0016248762308103,
+                learning_rate=8.029812004828775e-05, #4.5050195317802267e-07, #0.0004833166401413716, 
+                gamma=0.014860082035056302, #0.00014695028968659315, #0.0016248762308103,
                 max_grad_norm=0.4407777682504375,                
-                vf_coef=0.06626901866550569,
-                ent_coef=9.95884224654263e-05,
+                vf_coef=0.015655008049906154, #0.7371595732974793, #0.06626901866550569,
+                ent_coef=9.01290840683038e-06, #9.95884224654263e-05,
                 #ms_prop_eps=0.002035541701997199,
                 tensorboard_log=log_path, 
                 policy_kwargs=dict(activation_fn=activation_fn, 
