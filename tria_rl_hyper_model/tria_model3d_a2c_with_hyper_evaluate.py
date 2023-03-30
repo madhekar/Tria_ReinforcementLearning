@@ -17,6 +17,7 @@ from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3 import A2C
 #load_ext tf.tensorboard
+import tria_rl
 
 env_name = 'tria-3d-rl-model-'
 
@@ -33,7 +34,7 @@ tria_a2c_model_path = os.path.join('train','save', a2c_model_name)
 print(tria_a2c_model_path)
 ''' * * * gym tria environment instance * * * '''
 
-import tria_rl
+
 env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
 print(env.metadata)
 print('------------------------------------------------------------------')
