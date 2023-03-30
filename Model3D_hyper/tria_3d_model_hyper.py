@@ -37,13 +37,13 @@ n_startup_trials = 10
 
 n_evaluations = 5
 
-n_timesteps = int(2e4)
+n_timesteps = int(2e6)
 
 eval_freq = int(n_timesteps / n_evaluations)
 
 n_eval_envs = 2
 
-n_eval_episodes = 5
+n_eval_episodes = 50
 
 timeout = int(60 * 15) 
 
