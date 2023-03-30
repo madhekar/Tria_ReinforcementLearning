@@ -26,32 +26,32 @@ ppo_model_name = env_name + 'ppo'; neural_model_name = env_name + 'ppo-neural'; 
 ''' * * * gym tria environment instance * * * '''
 
 import tria_rl
-env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
-env = DummyVecEnv([lambda: env])
-env = VecNormalize(env, norm_obs=True, norm_reward= False)
+env = gym.make('tria_rl/TriaClimate-v0') # TriaEnv()
+#env = DummyVecEnv([lambda: env])
+#env = VecNormalize(env, norm_obs=True, norm_reward= False)
 
 print(env.metadata)
 print('------------------------------------------------------------------')
 print("1. Sample observation space: {}".format(env.observation_space.sample()))
 print("1. Sample observation space: {}".format(env.observation_space))
-print("1. Sample observation space: {}".format(env.observation_space.dtype))
+print("1. type observation space  : {}".format(env.observation_space.dtype))
 print("2. Sample action space     : {}".format(env.action_space.sample()))
-print("3. Sample state            : {}".format(env.state))    
+#print("3. Sample state            : {}".format(env.state))    
 print('------------------------------------------------------------------')
 ''' * * * gym tria environment instance validation before model * * * '''
-episodes = 5
+episodes = 50
 for episode in range(1, episodes+1):
     state = env.reset()
-    #print(state)
+    print(state)
     terminated = False
     score = 0 #[0,0,0] 
     
     while not terminated:
         #env.render()
         action = env.action_space.sample()
-        #print(action, terminated , reward)
-        #print(env.step(action))
-        next_state, reward, terminated,  info = env.step(action) 
+        print(action, terminated)
+        print(env.step(action))
+        next_state, reward, terminated, info = env.step(action) 
         score += reward #[a + b for a, b in zip(reward, score)]
     print('Episode: {} Score: {}'.format(episode, score))
 env.close()
@@ -87,7 +87,7 @@ env.close()
 
 print('* * * Tria PPO model for tria 3D environment predictions * * *')
 
-episodes=10
+episodes=100
 for episode in range(1, episodes+1):
     observation = env.reset()
     terminated = False

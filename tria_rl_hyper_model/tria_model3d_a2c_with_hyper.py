@@ -12,7 +12,7 @@ import torch as th
 #import tensorflow as tf
 
 from stable_baselines3 import PPO
-from stable_baselines3.common.vec_env import DummyVecEnv
+from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3 import A2C
@@ -32,13 +32,16 @@ print(log_path)
 
 import tria_rl
 env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
+#env = DummyVecEnv([lambda: env])
+#env = VecNormalize(env, norm_obs=True, norm_reward= False)
+#env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
 print(env.metadata)
 print('------------------------------------------------------------------')
 print("1. Sample observation space: {}".format(env.observation_space.sample()))
 print("1. Sample observation space: {}".format(env.observation_space))
 print("1. Sample observation space: {}".format(env.observation_space.dtype))
 print("2. Sample action space     : {}".format(env.action_space.sample()))
-print("3. Sample state            : {}".format(env.state))    
+#print("3. Sample state            : {}".format(env.state))    
 print('------------------------------------------------------------------')
 
 #print('------------------------------------------------------------------')
@@ -69,16 +72,16 @@ print('* * * Tria A2C network model for tria 3D environment * * *')
 
 net_arch = {'pi':[128,128,128,128], 'vf':[128,128,128,128]} #{"pi": [64, 64], "vf": [64, 64]} #dict(pi=[128,128,128,128], vf=[128,128,128,128])
 
-activation_fn=th.nn.LeakyReLU
+activation_fn=th.nn.Sigmoid
 
 a2c_model = A2C("MlpPolicy", 
                 env, 
                 verbose=1, 
-                learning_rate=8.029812004828775e-05, #4.5050195317802267e-07, #0.0004833166401413716, 
-                gamma=0.014860082035056302, #0.00014695028968659315, #0.0016248762308103,
-                max_grad_norm=0.4407777682504375,                
-                vf_coef=0.015655008049906154, #0.7371595732974793, #0.06626901866550569,
-                ent_coef=9.01290840683038e-06, #9.95884224654263e-05,
+                learning_rate=6.641043097747655e-06,#8.029812004828775e-05, #4.5050195317802267e-07, #0.0004833166401413716, 
+                gamma= 0.0007636834626226195, #0.014860082035056302, #0.00014695028968659315, #0.0016248762308103,
+                max_grad_norm=0.6349130528084744, #0.4407777682504375,                
+                vf_coef=0.014100089033975662, #0.015655008049906154, #0.7371595732974793, #0.06626901866550569,
+                ent_coef=3.732843160319487e-08, #9.01290840683038e-06, #9.95884224654263e-05,
                 #ms_prop_eps=0.002035541701997199,
                 tensorboard_log=log_path, 
                 policy_kwargs=dict(activation_fn=activation_fn, 

@@ -28,14 +28,14 @@ stat_rand_min = -1.0; stat_rand_max = 1.0
 
 equilibrium_cycles= 60
 
-r1 = -0.25; r2 = -0.5; r3 = 2; nr3 = -2
+r1 = -0.5; r2 = -1.0; r3 = 10.0; nr3 = -10.0
 
-const_weight_vec  = [1, 1, 1, 1]
+const_weight_vec  = [1, 1, 1, 1, 1]
 
 d3 = {
      0 : [65.0, 80.0, 50.0, 85.0, 40.0, 90.0], 
      1 : [30.0, 50.0, 20.0, 60.0, 10.0, 70.0], 
-     2 : [0.0, 19.0, 200.0, 599.0, 600.0, 2000.0]
+     2 : [0.0, 19.0, 20.0, 200.0, 201.0, 600.0]
     }
 
 d1 = {0: [65.0, 80.0], 1: [30.0, 50.0], 2: [0.0, 20.0]}
@@ -109,8 +109,8 @@ class TriaEnv(Env):
 
 ''' * * * gym tria environment instance * * * '''
 
-import gym_examples
-env = gym.make('gym_examples/TriaClimate-v0') #TriaEnv()
+#import gym_examples
+env = TriaEnv() #gym.make('gym_examples/TriaClimate-v0') #
 
 print("1. Sample observation space: {}".format(env.observation_space.sample()))
 print("1. Sample observation space: {}".format(env.observation_space))

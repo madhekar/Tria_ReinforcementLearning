@@ -146,16 +146,17 @@ def objective(trial: optuna.Trial) -> float:
     # Create the RL model
     model = A2C(**kwargs)
     # Create env used for evaluation
-    import tria_rl
-    env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
-    env = DummyVecEnv([lambda: env])
-    env = VecNormalize(env, norm_obs=True, norm_reward= False)
-    #eval_envs = make_vec_env(env_name, n_eval_envs)
+    
+    #import tria_rl
+    #env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
+    #env = DummyVecEnv([lambda: env])
+    #eval_envs = VecNormalize(env, norm_obs=True, norm_reward= False)
+    
+    eval_envs = make_vec_env(env_name, n_eval_envs)
     # Create the callback that will periodically evaluate
     # and report the performance
     eval_callback = TriaTrialEvalCallback(
-        env,
-        #eval_envs,
+        eval_envs,
         trial,
         n_eval_episodes= n_eval_episodes, #N_EVAL_EPISODES,
         eval_freq= eval_freq, #EVAL_FREQ,
