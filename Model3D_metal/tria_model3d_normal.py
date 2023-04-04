@@ -28,12 +28,12 @@ env = VecNormalize(env, norm_obs=True, norm_reward=False)
 
 model = A2C(policy = "MlpPolicy",
             env = env,
-            gae_lambda = 0.9,
-            gamma = 0.99,
-            learning_rate = 0.00006,
+            gae_lambda = 0.117120962797502,
+            gamma =0.0016248762308103,
+            learning_rate = 1.7072936513375555e-08,
             max_grad_norm = 0.5,
             n_steps = 8,
-            vf_coef = 0.4,
+            vf_coef = 0.00200901228628941,
             ent_coef = 0.0,
             policy_kwargs=dict(
             log_std_init=-2, ortho_init=False),
@@ -42,7 +42,7 @@ model = A2C(policy = "MlpPolicy",
             #use_sde= True,
             verbose=1)
 
-model.learn(total_timesteps=200000)
+model.learn(total_timesteps=2000000)
 
 tria_a2c_model_path = os.path.join('train','save', "tria_a2c_normalized")
 
