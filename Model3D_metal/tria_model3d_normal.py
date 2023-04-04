@@ -12,15 +12,15 @@ from stable_baselines3.common.env_util import make_vec_env
 import tria_rl
 #env = gym.make('tria_rl/TriaClimate-v0')
 env_id = 'tria_rl/TriaClimate-v0'
-env = gym.make(env_id)
+env_s = gym.make(env_id)
 
 print('---- observation space ----')
-print('observation space size:   ',env.observation_space.shape[0])
-print('observation space sample: ',env.observation_space.sample)
+print('observation space size:   ',env_s.observation_space.shape[0])
+print('observation space sample: ',env_s.observation_space.sample)
 
 print('---- action space ----')
-print('action space: ', env.action_space)
-print('action space sample: ', env.action_space.sample())
+print('action space: ', env_s.action_space)
+print('action space sample: ', env_s.action_space.sample())
 
 env = make_vec_env(env_id, n_envs=4)
 
@@ -30,7 +30,7 @@ model = A2C(policy = "MlpPolicy",
             env = env,
             gae_lambda = 0.9,
             gamma = 0.99,
-            learning_rate = 0.00096,
+            learning_rate = 0.00006,
             max_grad_norm = 0.5,
             n_steps = 8,
             vf_coef = 0.4,
@@ -50,9 +50,9 @@ model.save(tria_a2c_model_path)
 
 del model
 
-a2c_model = A2C.load(tria_a2c_model_path, env=env)
+model = A2C.load(tria_a2c_model_path, env=env)
 
-evaluate_policy(a2c_model, env, n_eval_episodes=20, render=False)
+evaluate_policy(model, env, n_eval_episodes=20, render=False)
 
 env.close()
 
@@ -60,13 +60,13 @@ print('* * * Tria A2C model for tria 3D environment predictions * * *')
 
 episodes=10
 for episode in range(1, episodes+1):
-    observation = env.reset()
+    observation = env_s.reset()
     terminated = False
     score = 0
     while not terminated:
         #env.render()
-        action, _ = a2c_model.predict(observation)
-        observation, reward, terminated , info = env.step(action)
+        action, _ = model.predict(observation)
+        observation, reward, terminated , info = env_s.step(action)
         score += reward
     print('Model Name: {} Episone:{} Score:{}'.format( "tria_a2c_normalized", episode, score))
 
