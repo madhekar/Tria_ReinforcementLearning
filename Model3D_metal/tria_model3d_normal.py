@@ -22,12 +22,12 @@ print('---- action space ----')
 print('action space: ', env_s.action_space)
 print('action space sample: ', env_s.action_space.sample())
 
-env = make_vec_env(env_id, n_envs=4)
+#env = make_vec_env(env_id, n_envs=4)
 
-env = VecNormalize(env, norm_obs=True, norm_reward=False)
+#env = VecNormalize(env, norm_obs=True, norm_reward=True)
 
 model = A2C(policy = "MlpPolicy",
-            env = env,
+            env = env_s,
             gae_lambda = 0.117120962797502,
             gamma =0.0016248762308103,
             learning_rate = 1.7072936513375555e-08,
@@ -50,11 +50,11 @@ model.save(tria_a2c_model_path)
 
 del model
 
-model = A2C.load(tria_a2c_model_path, env=env)
+model = A2C.load(tria_a2c_model_path, env=env_s)
 
-evaluate_policy(model, env, n_eval_episodes=20, render=False)
+evaluate_policy(model, env_s, n_eval_episodes=20, render=False)
 
-env.close()
+env_s.close()
 
 print('* * * Tria A2C model for tria 3D environment predictions * * *')
 
