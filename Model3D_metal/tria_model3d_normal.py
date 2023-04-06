@@ -22,15 +22,15 @@ print('---- action space ----')
 print('action space: ', env_s.action_space)
 print('action space sample: ', env_s.action_space.sample())
 
-#env = make_vec_env(env_id, n_envs=4)
+env = make_vec_env(env_id, n_envs=1)
 
-#env = VecNormalize(env, norm_obs=True, norm_reward=True)
+env = VecNormalize(env, norm_obs=True, norm_reward=True, clip_reward=50, training=True, gamma=.99 )
 
 model = A2C(policy = "MlpPolicy",
-            env = env_s,
+            env = env,
             gae_lambda = 0.117120962797502,
             gamma =0.0016248762308103,
-            learning_rate = 1.7072936513375555e-08,
+            learning_rate = 1.7072936513375555e-04,
             max_grad_norm = 0.5,
             n_steps = 8,
             vf_coef = 0.00200901228628941,
@@ -70,6 +70,6 @@ for episode in range(1, episodes+1):
         score += reward
     print('Model Name: {} Episone:{} Score:{}'.format( "tria_a2c_normalized", episode, score))
 
-env.close() 
+env_s.close() 
 
 print('------------------------------------------------------------------')
