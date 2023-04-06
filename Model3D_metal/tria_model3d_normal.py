@@ -9,6 +9,39 @@ from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 from stable_baselines3.common.env_util import make_vec_env
 
+from stable_baselines3.common.callbacks import BaseCallback
+from stable_baselines3.common.logger import HParam
+
+class HParamCallback(BaseCallback):
+    """
+    Saves the hyperparameters and metrics at the start of the training, and logs them to TensorBoard.
+    """
+
+    def _on_training_start(self) -> None:
+        hparam_dict = {
+            "algorithm": self.model.__class__.__name__,
+            "learning rate": self.model.learning_rate,
+            "gamma": self.model.gamma,
+            "gae_lambda": self.model.gae_lambda,
+            "ent_coef": self.model.ent_coef,
+            "vf_coef": self.model.vf_coef,
+            "max_grad_norm": self.model.max_grad_norm
+        }
+        # define the metrics that will appear in the `HPARAMS` Tensorboard tab by referencing their tag
+        # Tensorbaord will find & display metrics from the `SCALARS` tab
+        metric_dict = {
+            "rollout/ep_len_mean": 0,
+            "train/value_loss": 0.0,
+        }
+        self.logger.record(
+            "hparams",
+            HParam(hparam_dict, metric_dict),
+            exclude=("stdout", "log", "json", "csv"),
+        )
+
+    def _on_step(self) -> bool:
+        return True
+
 import tria_rl
 #env = gym.make('tria_rl/TriaClimate-v0')
 env_id = 'tria_rl/TriaClimate-v0'
@@ -24,7 +57,7 @@ print('action space sample: ', env_s.action_space.sample())
 
 env = make_vec_env(env_id, n_envs=1)
 
-env = VecNormalize(env, norm_obs=True, norm_reward=True, clip_reward=50, training=True, gamma=.99 )
+env = VecNormalize(env, norm_obs=True, norm_reward=True, training=True, gamma=.99 )
 
 model = A2C(policy = "MlpPolicy",
             env = env,
@@ -42,7 +75,7 @@ model = A2C(policy = "MlpPolicy",
             #use_sde= True,
             verbose=1)
 
-model.learn(total_timesteps=2000000)
+model.learn(total_timesteps=2000000, callback=HParamCallback())
 
 tria_a2c_model_path = os.path.join('train','save', "tria_a2c_normalized")
 
