@@ -55,9 +55,9 @@ print('---- action space ----')
 print('action space: ', env_s.action_space)
 print('action space sample: ', env_s.action_space.sample())
 
-env = make_vec_env(env_id, n_envs=1)
+env = make_vec_env(env_id, n_envs=4)
 
-env = VecNormalize(env, norm_obs=True, norm_reward=True, training=True)
+env = VecNormalize(env, norm_obs=True, norm_reward=False, training=True)
 
 model = A2C(policy = "MlpPolicy",
             env = env,
