@@ -18,7 +18,7 @@ from stable_baselines3.common.evaluation import evaluate_policy
 
 env_name = 'tria-3d-rl-model-'
 
-ppo_model_timesteps= 200000; neural_model_timesteps=200000; a2c_model_timesteps=200000
+ppo_model_timesteps= 2000000; neural_model_timesteps=2000000; a2c_model_timesteps=2000000
 
 ppo_model_name = env_name + 'ppo'; neural_model_name = env_name + 'ppo-neural'; a2c_model_name = env_name + 'a2c'
 
@@ -59,6 +59,7 @@ print('------------------------------------------------------------------')
 
 ''' * * *  tria logging folders * * * '''
 log_path = os.path.join('train','log')
+
 print(log_path)
 
 '''  *  Tria Custom PPO Network  * '''
@@ -66,9 +67,10 @@ print('* * * Tria PPO model for tria 3D environment * * *')
 
 env = DummyVecEnv([lambda: env])
 
-env = VecNormalize(env, norm_obs=True, norm_reward= False)
+env = VecNormalize(env, norm_obs=True, norm_reward= True)
 
 #env = VecFrameStack(env, n_stack=4)
+
 ppo_model = PPO('MlpPolicy', env, verbose=1, tensorboard_log=log_path)
 
 ppo_model.learn(total_timesteps=ppo_model_timesteps)

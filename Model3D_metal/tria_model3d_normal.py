@@ -59,24 +59,28 @@ print('action space sample: ', env_s.action_space.sample())
 
 #env = VecNormalize(env, norm_obs=True, norm_reward=False, training=True)
 
+log_path = os.path.join('train', 'log')
+
 model = A2C(policy = "MlpPolicy",
             env = env_s,
-            gae_lambda = 0.117120962797502,
-            gamma = 0.80, #0.0016248762308103,
-            learning_rate = 1.7072936513375555e-01,
+            gae_lambda = 1.0, #0.117120962797502,
+            gamma = 0.99,#0.80, #0.0016248762308103,
+            learning_rate = 0.0007,#1.7072936513375555e-01,
             max_grad_norm = 0.5,
             n_steps = 8,
-            vf_coef = 0.00200901228628941,
+            vf_coef =0.5, # 0.00200901228628941,
             ent_coef = 0.0,
             policy_kwargs=dict(
             log_std_init=-2, 
             ortho_init=False),
             normalize_advantage=False,
+            rms_prop_eps=1e-08, 
             use_rms_prop= True,
             #use_sde= True,
-            verbose=1)
+            verbose=1,
+            tensorboard_log=log_path)
 
-model.learn(total_timesteps=2000000, callback=HParamCallback())
+model.learn(total_timesteps=200, callback=HParamCallback())
 
 tria_a2c_model_path = os.path.join('train','save', "tria_a2c_normalized")
 
