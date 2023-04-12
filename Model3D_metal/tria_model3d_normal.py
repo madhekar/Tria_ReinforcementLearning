@@ -57,7 +57,9 @@ print('action space sample: ', env_s.action_space.sample())
 
 #env = make_vec_env(env_id, n_envs=4)
 
-env_s = VecNormalize(env_s, norm_obs=True, norm_reward=True, training=True)
+env_s = DummyVecEnv([lambda: env_s])
+
+env_s = VecNormalize(env_s, norm_obs=True, norm_reward=True)
 
 log_path = os.path.join('train', 'log')
 
