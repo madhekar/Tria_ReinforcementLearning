@@ -37,7 +37,7 @@ n_startup_trials = 10
 
 n_evaluations = 5
 
-n_timesteps = int(2e4)
+n_timesteps = int(2e3)
 
 eval_freq = int(n_timesteps / n_evaluations)
 
@@ -93,7 +93,7 @@ def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
     elif net_arch == "small":
         net_arch = {"pi": [64, 64], "vf": [64, 64]}
     elif net_arch == "mid":
-        net_arch = {"pi":[64,64,64], "vf":[64,64,64]}
+        net_arch = {"pi":[64, 64, 64], "vf":[64, 64, 64]}
     else:
         net_arch = {"pi":[128,128,128,128], "vf":[128,128,128,128]}   
      
@@ -135,7 +135,6 @@ class TriaTrialEvalCallback(EvalCallback):
             if self.trial.should_prune():
                 self.is_pruned = True
                 return False
-            
         return True    
 
 def objective(trial: optuna.Trial) -> float:
@@ -147,12 +146,14 @@ def objective(trial: optuna.Trial) -> float:
     model = A2C(**kwargs)
     # Create env used for evaluation
     
-    #import tria_rl
-    #env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
-    #env = DummyVecEnv([lambda: env])
-    #eval_envs = VecNormalize(env, norm_obs=True, norm_reward= False)
+    import tria_rl
+    env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
+    env = DummyVecEnv([lambda: env])
+    eval_envs = VecNormalize(env, norm_obs=True, norm_reward= True)
+
+    #eval_envs = VecFrameStack(eval_envs, n_stack=4)
     
-    eval_envs = make_vec_env(env_name, n_eval_envs)
+    #eval_envs = make_vec_env(env_name, n_eval_envs)
     # Create the callback that will periodically evaluate
     # and report the performance
     eval_callback = TriaTrialEvalCallback(
