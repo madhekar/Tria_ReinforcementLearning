@@ -37,7 +37,7 @@ n_startup_trials = 10
 
 n_evaluations = 5
 
-n_timesteps = int(2e3)
+n_timesteps = int(2e5)
 
 eval_freq = int(n_timesteps / n_evaluations)
 
@@ -98,7 +98,11 @@ def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
         net_arch = {"pi":[128,128,128,128], "vf":[128,128,128,128]}   
      
     # activation / non-linearity selection 
-    activation_fn = {"tanh": nn.Tanh, "relu": nn.ReLU, "leakyRelu": nn.LeakyReLU, "sigmoid": nn.Sigmoid}[activation_fn]
+    activation_fn = {
+        "tanh": nn.Tanh, 
+        "relu": nn.ReLU, 
+        "leakyRelu": nn.LeakyReLU, 
+        "sigmoid": nn.Sigmoid} [activation_fn]
     
     return {
         "n_steps": n_steps,
@@ -147,8 +151,11 @@ def objective(trial: optuna.Trial) -> float:
     # Create env used for evaluation
     
     import tria_rl
+
     env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
+
     env = DummyVecEnv([lambda: env])
+
     eval_envs = VecNormalize(env, norm_obs=True, norm_reward= True)
 
     #eval_envs = VecFrameStack(eval_envs, n_stack=4)
