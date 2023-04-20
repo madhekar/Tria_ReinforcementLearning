@@ -37,7 +37,7 @@ n_startup_trials = 10
 
 n_evaluations = 5
 
-n_timesteps = int(2e5)
+n_timesteps = int(2e4)
 
 eval_freq = int(n_timesteps / n_evaluations)
 
@@ -102,7 +102,8 @@ def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
         "tanh": nn.Tanh, 
         "relu": nn.ReLU, 
         "leakyRelu": nn.LeakyReLU, 
-        "sigmoid": nn.Sigmoid} [activation_fn]
+        "sigmoid": nn.Sigmoid
+        } [activation_fn]
     
     return {
         "n_steps": n_steps,
