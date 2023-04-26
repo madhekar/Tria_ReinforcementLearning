@@ -29,7 +29,7 @@ import tria_rl
 
 env_name = 'tria_rl/TriaClimate-v0'
 
-n_trials = 100
+n_trials = 125
 
 n_jobs = 1
 
@@ -66,7 +66,7 @@ def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
     
     n_steps = 2 ** trial.suggest_int("exponent_n_steps", 3, 10, log=True)
     
-    learning_rate = trial.suggest_float("lr", 1e-9, 1, log=True)
+    learning_rate = trial.suggest_float("lr", 1e-8, 0.1, log=True)
     
     ent_coef = trial.suggest_float("ent_coef", 0.00000001, 0.1, log=True)
 
@@ -76,7 +76,7 @@ def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
     
     net_arch = trial.suggest_categorical("net_arch", ["tiny", "small", "mid", "large"])
     
-    activation_fn = trial.suggest_categorical("activation_fn", ["tanh", "relu", "leakyRelu", "sigmoid"])
+    activation_fn = trial.suggest_categorical("activation_fn", ["tanh", "relu", "leakyRelu"])
 
     #learn_rate_schedule = trial.suggest_categorical('learn_rate_schedule',['constant','linear','double_linear_con','middle_drop','double_middle_drop'])
 
@@ -101,8 +101,7 @@ def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
     activation_fn = {
         "tanh": nn.Tanh, 
         "relu": nn.ReLU, 
-        "leakyRelu": nn.LeakyReLU, 
-        "sigmoid": nn.Sigmoid
+        "leakyRelu": nn.LeakyReLU
         } [activation_fn]
     
     return {
