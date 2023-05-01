@@ -20,8 +20,8 @@ from helper import plots
 
 env_name = 'tria-3d-rl-model-'
 
-ppo_model_timesteps= 20; neural_model_timesteps=20; a2c_model_timesteps=20
-predict_episodes=1000
+ppo_model_timesteps= 2000000; neural_model_timesteps=2000000; a2c_model_timesteps=2000000
+predict_episodes=10000
 ppo_model_name = env_name + 'ppo'; neural_model_name = env_name + 'ppo-neural'; a2c_model_name = env_name + 'a2c'
 
 
