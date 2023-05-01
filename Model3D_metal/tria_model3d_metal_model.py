@@ -16,12 +16,12 @@ from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.evaluation import evaluate_policy
 #load_ext tf.tensorboard
 
-from helper import plot
+from helper import plots
 
 env_name = 'tria-3d-rl-model-'
 
 ppo_model_timesteps= 20000; neural_model_timesteps=20000; a2c_model_timesteps=20000
-
+predict_episodes=100
 ppo_model_name = env_name + 'ppo'; neural_model_name = env_name + 'ppo-neural'; a2c_model_name = env_name + 'a2c'
 
 
@@ -31,6 +31,8 @@ import tria_rl
 env = gym.make('tria_rl/TriaClimate-v0') # TriaEnv()
 #env = DummyVecEnv([lambda: env])
 #env = VecNormalize(env, norm_obs=True, norm_reward= False)
+plot_scores= [[0] * predict_episodes for i in range(4)]
+plot_mean_scores=[[0] * predict_episodes for i in range(4)]
 
 print(env.metadata)
 print('------------------------------------------------------------------')
@@ -41,31 +43,24 @@ print("2. Sample action space     : {}".format(env.action_space.sample()))
 #print("3. Sample state            : {}".format(env.state))    
 print('------------------------------------------------------------------')
 ''' * * * gym tria environment instance validation before model * * * '''
-episodes = 50  
-plot_scores=[]
+
 total_score = 0
-plot_mean_scores=[]
-for episode in range(1, episodes+1):
+for episode in range(0, predict_episodes):
     state = env.reset()
     print(state)
     terminated = False
     score = 0 #[0,0,0] 
     game=0
     while not terminated:
-        #env.render()
         action = env.action_space.sample()
-        #print(action, terminated)
-        #print(env.step(action))
         next_state, rew, terminated, info = env.step(action) 
         score += rew
         game +=1
     print('Episode: {} Score: {}'.format(episode, score))
-    plot_scores.append(score)
+    plot_scores[0][episode] = score
     total_score += score
     mean_score = total_score / game
-    plot_mean_scores.append(mean_score)
-print(plot_scores, ',', plot_mean_scores)    
-#plot(plot_scores, plot_mean_scores)    
+    plot_mean_scores[0][episode] = mean_score 
 env.close()
 print('------------------------------------------------------------------')
 
@@ -100,28 +95,24 @@ evaluate_policy(ppo_model, env, n_eval_episodes=20, render=False)
 env.close()
 
 print('* * * Tria PPO model for tria 3D environment predictions * * *')
-plot_scores=[]
+
 total_score = 0
-plot_mean_scores=[]
-episodes=100
-for episode in range(1, episodes+1):
+for episode in range(0, predict_episodes):
     observation = env.reset()
     terminated = False
     score = 0
     game=0
     while not terminated:
-        #env.render()
         action, _ = ppo_model.predict(observation)
-        observation, reward, terminated , info = env.step(action)
-        score += reward
+        observation, rew, terminated , info = env.step(action)
+        #print(rew)
+        score += sum(rew)
         game +=1
     print('Model Name: {} Episone:{} Score:{}'.format( ppo_model_name, episode, score))
-    plot_scores.append(score)
+    plot_scores[1][episode] = score
     total_score += score
     mean_score = total_score / game
-    plot_mean_scores.append(mean_score)
-print(plot_scores, ',', plot_mean_scores)      
-    #plot(plot_scores, plot_mean_scores)
+    plot_mean_scores[1][episode] = mean_score
 env.close()  
 
 print('------------------------------------------------------------------')
@@ -151,28 +142,23 @@ env.close()
 
 
 print('* * * Tria neural network model for tria 3D environment predictions * * *')
-plot_scores=[]
 total_score = 0
-plot_mean_scores=[]
-episodes=100
-for episode in range(1, episodes+1):
+for episode in range(0, predict_episodes):
     observation = env.reset()
     terminated = False
     score = 0
     game=0
     while not terminated:
-        #env.render()
         action, _ = nn_model.predict(observation)
-        observation, reward, terminated , info = env.step(action)
-        score += reward
+        observation, rew, terminated , info = env.step(action)
+        #print(rew)
+        score += sum(rew)
         game +=1
     print('Model Name: {} Episone:{} Score:{}'.format( neural_model_name, episode, score))
-    plot_scores.append(score)
+    plot_scores[2][episode] = score
     total_score += score
     mean_score = total_score / game
-    plot_mean_scores.append(mean_score)
-    #plot(plot_scores, plot_mean_scores)
-print(plot_scores, ',', plot_mean_scores)  
+    plot_mean_scores[2][episode] = mean_score
 env.close()  
 
 print('------------------------------------------------------------------')
@@ -200,11 +186,9 @@ env.close()
 
 print('* * * Tria A2C model for tria 3D environment predictions * * *')
 
-episodes=10  
-plot_scores=[]
+
 total_score = 0
-plot_mean_scores=[]
-for episode in range(1, episodes+1):
+for episode in range(0, predict_episodes):
     observation = env.reset()
     terminated = False
     score = 0
@@ -212,19 +196,19 @@ for episode in range(1, episodes+1):
     while not terminated:
         #env.render()
         action, _ = a2c_model.predict(observation)
-        observation, reward, terminated , info = env.step(action)
-        score += reward
+        observation, rew, terminated , info = env.step(action)
+        score += sum(rew)
         game +=1
     print('Model Name: {} Episone:{} Score:{}'.format( a2c_model_name, episode, score))
     
-    plot_scores.append(score)
+    plot_scores[3][episode] = score
     total_score += score
     mean_score = total_score / game
-    plot_mean_scores.append(mean_score)
-    #plot(plot_scores, plot_mean_scores)
-print(plot_scores, ',', plot_mean_scores)     
+    plot_mean_scores[3][episode] = mean_score  
 env.close() 
 
 print('------------------------------------------------------------------')
+
+plots(plot_scores, plot_mean_scores)
 
 #tensorboard --logdir './train/log/' --bind_all  # training_log_path
