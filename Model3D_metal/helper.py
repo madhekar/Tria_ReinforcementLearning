@@ -20,9 +20,8 @@ def plot(scores, mean_scores):
 
 def plots(scores, mean_scores):
 
-    print('Data:', scores[0], scores[1])
     freq = np.arange(0, len(scores[0]), dtype=int)
-    fig, ax = plt.subplots(nrows=2,ncols=2, figsize=(8,8), layout='constrained')
+    fig, ax = plt.subplots(nrows=2,ncols=2, figsize=(10,10))
     fig.tight_layout()
 
     ax[0,0].set_title('no model')

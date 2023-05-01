@@ -20,8 +20,8 @@ from helper import plots
 
 env_name = 'tria-3d-rl-model-'
 
-ppo_model_timesteps= 20000; neural_model_timesteps=20000; a2c_model_timesteps=20000
-predict_episodes=100
+ppo_model_timesteps= 20; neural_model_timesteps=20; a2c_model_timesteps=20
+predict_episodes=1000
 ppo_model_name = env_name + 'ppo'; neural_model_name = env_name + 'ppo-neural'; a2c_model_name = env_name + 'a2c'
 
 
@@ -44,21 +44,23 @@ print("2. Sample action space     : {}".format(env.action_space.sample()))
 print('------------------------------------------------------------------')
 ''' * * * gym tria environment instance validation before model * * * '''
 
-total_score = 0
+
 for episode in range(0, predict_episodes):
     state = env.reset()
-    print(state)
+    #print(state)
     terminated = False
     score = 0 #[0,0,0] 
     game=0
+    total_score = 0
     while not terminated:
         action = env.action_space.sample()
         next_state, rew, terminated, info = env.step(action) 
         score += rew
         game +=1
-    print('Episode: {} Score: {}'.format(episode, score))
+    #print('Episode: {} Score: {}'.format(episode, score))
     plot_scores[0][episode] = score
     total_score += score
+    #print(total_score, game)
     mean_score = total_score / game
     plot_mean_scores[0][episode] = mean_score 
 env.close()
@@ -96,22 +98,24 @@ env.close()
 
 print('* * * Tria PPO model for tria 3D environment predictions * * *')
 
-total_score = 0
+
 for episode in range(0, predict_episodes):
     observation = env.reset()
     terminated = False
     score = 0
     game=0
+    total_score = 0
     while not terminated:
         action, _ = ppo_model.predict(observation)
         observation, rew, terminated , info = env.step(action)
         #print(rew)
         score += sum(rew)
         game +=1
-    print('Model Name: {} Episone:{} Score:{}'.format( ppo_model_name, episode, score))
+    #print('Model Name: {} Episone:{} Score:{}'.format( ppo_model_name, episode, score))
     plot_scores[1][episode] = score
     total_score += score
     mean_score = total_score / game
+    #print(total_score, game)
     plot_mean_scores[1][episode] = mean_score
 env.close()  
 
@@ -148,13 +152,14 @@ for episode in range(0, predict_episodes):
     terminated = False
     score = 0
     game=0
+    total_score = 0
     while not terminated:
         action, _ = nn_model.predict(observation)
         observation, rew, terminated , info = env.step(action)
         #print(rew)
         score += sum(rew)
         game +=1
-    print('Model Name: {} Episone:{} Score:{}'.format( neural_model_name, episode, score))
+    #print('Model Name: {} Episone:{} Score:{}'.format( neural_model_name, episode, score))
     plot_scores[2][episode] = score
     total_score += score
     mean_score = total_score / game
@@ -193,13 +198,14 @@ for episode in range(0, predict_episodes):
     terminated = False
     score = 0
     game=0    
+    total_score = 0
     while not terminated:
         #env.render()
         action, _ = a2c_model.predict(observation)
         observation, rew, terminated , info = env.step(action)
         score += sum(rew)
         game +=1
-    print('Model Name: {} Episone:{} Score:{}'.format( a2c_model_name, episode, score))
+    #print('Model Name: {} Episone:{} Score:{}'.format( a2c_model_name, episode, score))
     
     plot_scores[3][episode] = score
     total_score += score
