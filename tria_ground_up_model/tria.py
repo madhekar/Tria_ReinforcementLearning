@@ -2,10 +2,13 @@ import gym
 import numpy as np
 from dueling_ddqn_torch import Agent
 from tools import plotLearning
+import tria_rl
 
 if __name__ == '__main__':
     env = gym.make('LunarLander-v2')
-    num_games = 250
+    
+    #env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
+    num_games = 10
     load_checkpoint = False
 
     agent = Agent(gamma=0.99, epsilon=1.0, lr=5e-4,
@@ -23,14 +26,15 @@ if __name__ == '__main__':
     for i in range(num_games):
         done = False
         observation = env.reset()
+        print('obs: ', observation)
         score = 0
 
         while not done:
             action = agent.choose_action(observation)
+            #print('action: ', action)
             observation_, reward, done, info = env.step(action)
             score += reward
-            agent.store_transition(observation, action,
-                                    reward, observation_, int(done))
+            agent.store_transition(observation, action,reward, observation_, int(done))
             agent.learn()
 
             observation = observation_

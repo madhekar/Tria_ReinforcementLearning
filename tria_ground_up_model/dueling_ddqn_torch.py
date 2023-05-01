@@ -9,10 +9,8 @@ class ReplayBuffer():
     def __init__(self, max_size, input_shape, n_a):
         self.mem_size = max_size
         self.mem_cntr = 0
-        self.state_memory = np.zeros((self.mem_size, *input_shape),
-                                    dtype=np.float32)
-        self.new_state_memory = np.zeros((self.mem_size, *input_shape),
-                                        dtype=np.float32)
+        self.state_memory = np.zeros((self.mem_size, *input_shape), dtype=np.float32)
+        self.new_state_memory = np.zeros((self.mem_size, *input_shape), dtype=np.float32)
         self.action_memory = np.zeros(self.mem_size, dtype=np.int64)
         self.reward_memory = np.zeros(self.mem_size, dtype=np.float32)
         self.terminal_memory = np.zeros(self.mem_size, dtype=np.uint8)
@@ -45,11 +43,12 @@ class DuelingDeepQNetwork(nn.Module):
         self.checkpoint_file = os.path.join(self.checkpoint_dir, name)
 
         self.fc1 = nn.Linear(*input_dims, 512)
+        print('input_dim: ', input_dims)
         self.V = nn.Linear(512, 1)
         self.A = nn.Linear(512, n_actions)
 
         self.optimizer = optim.Adam(self.parameters(), lr=lr)
-        self.loss = nn.MSELoss()
+        self.loss = nn.CrossEntropyLoss()#nn.MSELoss()
         self.device = T.device('cuda:0' if T.cuda.is_available() else 'cpu')
         self.to(self.device)
 
@@ -84,7 +83,7 @@ class Agent():
         self.chkpt_dir = chkpt_dir
         self.action_space = [i for i in range(self.n_actions)]
         self.learn_step_counter = 0
-
+        print('action space: ',self.action_space)
         self.memory = ReplayBuffer(mem_size, input_dims, n_actions)
 
         self.q_eval = DuelingDeepQNetwork(self.lr, self.n_actions,
@@ -99,7 +98,7 @@ class Agent():
 
     def choose_action(self, observation):
         if np.random.random() > self.epsilon:
-            state = T.tensor([observation],dtype=T.float).to(self.q_eval.device)
+            state = T.tensor(np.array(observation),dtype=T.float).to(self.q_eval.device)
             _, advantage = self.q_eval.forward(state)
             action = T.argmax(advantage).item()
         else:
@@ -134,8 +133,7 @@ class Agent():
 
         self.replace_target_network()
 
-        state, action, reward, new_state, done = \
-                                self.memory.sample_buffer(self.batch_size)
+        state, action, reward, new_state, done = self.memory.sample_buffer(self.batch_size)
 
         states = T.tensor(state).to(self.q_eval.device)
         rewards = T.tensor(reward).to(self.q_eval.device)
@@ -150,10 +148,8 @@ class Agent():
 
         V_s_eval, A_s_eval = self.q_eval.forward(states_)
 
-        q_pred = T.add(V_s,
-                        (A_s - A_s.mean(dim=1, keepdim=True)))[indices, actions]
-        q_next = T.add(V_s_,
-                        (A_s_ - A_s_.mean(dim=1, keepdim=True)))
+        q_pred = T.add(V_s, (A_s - A_s.mean(dim=1, keepdim=True)))[indices, actions]
+        q_next = T.add(V_s_,(A_s_ - A_s_.mean(dim=1, keepdim=True)))
 
         q_eval = T.add(V_s_eval, (A_s_eval - A_s_eval.mean(dim=1,keepdim=True)))
 

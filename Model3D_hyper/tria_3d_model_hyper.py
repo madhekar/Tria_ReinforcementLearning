@@ -89,7 +89,7 @@ def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
     
     #neural network selection choice
     if (net_arch == "tiny"): 
-        net_arch = {"pi": [64], "vf": [64]} 
+        net_arch = {"pi": [400], "vf": [300]} 
     elif net_arch == "small":
         net_arch = {"pi": [64, 64], "vf": [64, 64]}
     elif net_arch == "mid":
