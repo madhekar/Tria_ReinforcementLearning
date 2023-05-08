@@ -37,7 +37,7 @@ n_startup_trials = 10
 
 n_evaluations = 5
 
-n_timesteps = int(2e4)
+n_timesteps = int(2e5)
 
 eval_freq = int(n_timesteps / n_evaluations)
 
