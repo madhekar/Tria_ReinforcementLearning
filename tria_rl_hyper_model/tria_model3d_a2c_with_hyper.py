@@ -116,7 +116,7 @@ for episode in range(1, episodes+1):
     score = 0
     while not terminated:
         #env.render()
-        action, _ = a2c_model.predict(observation, deterministic=True)
+        action, _ = a2c_model.predict(observation, deterministic=False)
         observation, reward, terminated , info = env.step(action)
         score += reward
         print('observation: {} action: {}'.format(observation, action));
