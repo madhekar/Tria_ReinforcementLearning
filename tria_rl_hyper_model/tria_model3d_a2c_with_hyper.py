@@ -20,7 +20,7 @@ from stable_baselines3 import A2C
 
 env_name = 'tria-3d-rl-model-'
 
-a2c_model_timesteps=2000000
+a2c_model_timesteps=20000
 
 ppo_model_name = env_name + 'ppo'; neural_model_name = env_name + 'ppo-neural'; a2c_model_name = env_name + 'a2c'
 
@@ -72,7 +72,7 @@ print('* * * Tria A2C network model for tria 3D environment * * *')
 
 net_arch = {'pi':[400], 'vf':[300]} #{"pi": [64, 64], "vf": [64, 64]} #dict(pi=[128,128,128,128], vf=[128,128,128,128])
 
-activation_fn=th.nn.LeakyReLU, #th.nn.Tanh
+activation_fn=th.nn.LeakyReLU #th.nn.Tanh
 
 a2c_model = A2C("MlpPolicy", 
                 env, 
