@@ -76,7 +76,7 @@ print('* * * Tria PPO model for tria 3D environment * * *')
 
 env = DummyVecEnv([lambda: env])
 
-env = VecNormalize(env, norm_obs=True, norm_reward= True)
+env = VecNormalize(env, norm_obs=True, norm_reward= False)
 
 #env = VecFrameStack(env, n_stack=4)
 
