@@ -5,20 +5,20 @@ from tools import plotLearning
 import tria_rl
 
 if __name__ == '__main__':
-    env = gym.make('LunarLander-v2')
+    #env = gym.make('LunarLander-v2')
     
-    #env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
+    env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
     num_games = 10
     load_checkpoint = False
 
     agent = Agent(gamma=0.99, epsilon=1.0, lr=5e-4,
-                  input_dims=[8], n_actions=4, mem_size=100000, eps_min=0.01,
+                  input_dims=[3], n_actions=14, mem_size=100000, eps_min=0.01,
                   batch_size=64, eps_dec=1e-3, replace=100)
 
     if load_checkpoint:
         agent.load_models()
 
-    filename = 'LunarLander-Dueling-DDQN-512-Adam-lr0005-replace100.png'
+    filename = 'Tria-Dueling-DDQN-512-Adam-lr0005-replace100.png'
     scores = []
     eps_history = []
     n_steps = 0
@@ -26,15 +26,15 @@ if __name__ == '__main__':
     for i in range(num_games):
         done = False
         observation = env.reset()
-        print('obs: ', observation)
+        #print('obs: ', observation)
         score = 0
 
         while not done:
             action = agent.choose_action(observation)
-            #print('action: ', action)
+            print('action: ', action)
             observation_, reward, done, info = env.step(action)
             score += reward
-            agent.store_transition(observation, action,reward, observation_, int(done))
+            agent.store_transition(observation, action, reward, observation_, int(done))
             agent.learn()
 
             observation = observation_
@@ -48,6 +48,6 @@ if __name__ == '__main__':
             agent.save_models()
 
         eps_history.append(agent.epsilon)
-
+    print(scores, eps_history)
     x = [i+1 for i in range(num_games)]
     plotLearning(x, scores, eps_history, filename)
