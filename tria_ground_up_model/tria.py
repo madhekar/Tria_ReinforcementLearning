@@ -8,7 +8,7 @@ if __name__ == '__main__':
     #env = gym.make('LunarLander-v2')
     
     env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
-    num_games = 10
+    num_games = 100000
     load_checkpoint = False
 
     agent = Agent(gamma=0.99, epsilon=1.0, lr=5e-4,
