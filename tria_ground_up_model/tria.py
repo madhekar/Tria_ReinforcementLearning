@@ -48,6 +48,6 @@ if __name__ == '__main__':
             agent.save_models()
 
         eps_history.append(agent.epsilon)
-    print(scores, eps_history)
+    #print(scores, eps_history)
     x = [i+1 for i in range(num_games)]
     plotLearning(x, scores, eps_history, filename)

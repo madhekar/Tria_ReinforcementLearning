@@ -48,7 +48,7 @@ class DuelingDeepQNetwork(nn.Module):
         self.A = nn.Linear(512, n_actions)
 
         self.optimizer = optim.Adam(self.parameters(), lr=lr)
-        self.loss = nn.CrossEntropyLoss()#nn.MSELoss()
+        self.loss = nn.MSELoss() #nn.CrossEntropyLoss()#nn.MSELoss()
         self.device = T.device('cuda:0' if T.cuda.is_available() else 'cpu')
         self.to(self.device)
 
