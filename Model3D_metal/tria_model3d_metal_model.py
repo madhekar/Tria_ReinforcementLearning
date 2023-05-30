@@ -20,8 +20,8 @@ from helper import plots
 
 env_name = 'tria-3d-rl-model-'
 
-ppo_model_timesteps= 2000000; neural_model_timesteps=2000000; a2c_model_timesteps=2000000
-predict_episodes=10000
+ppo_model_timesteps= 20000; neural_model_timesteps=20000; a2c_model_timesteps=20000
+predict_episodes=1000
 ppo_model_name = env_name + 'ppo'; neural_model_name = env_name + 'ppo-neural'; a2c_model_name = env_name + 'a2c'
 
 
@@ -37,13 +37,12 @@ plot_mean_scores=[[0] * predict_episodes for i in range(4)]
 print(env.metadata)
 print('------------------------------------------------------------------')
 print("1. Sample observation space: {}".format(env.observation_space.sample()))
-print("1. Sample observation space: {}".format(env.observation_space))
-print("1. type observation space  : {}".format(env.observation_space.dtype))
-print("2. Sample action space     : {}".format(env.action_space.sample()))
+print("2. Sample observation space: {}".format(env.observation_space))
+print("3. type observation space  : {}".format(env.observation_space.dtype))
+print("4. Sample action space     : {}".format(env.action_space.sample()))
 #print("3. Sample state            : {}".format(env.state))    
 print('------------------------------------------------------------------')
 ''' * * * gym tria environment instance validation before model * * * '''
-
 
 for episode in range(0, predict_episodes):
     state = env.reset()
