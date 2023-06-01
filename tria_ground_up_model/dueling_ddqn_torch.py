@@ -88,18 +88,19 @@ class Agent():
 
         self.q_eval = DuelingDeepQNetwork(self.lr, self.n_actions,
                                    input_dims=self.input_dims,
-                                   name='lunar_lander_dueling_ddqn_q_eval',
+                                   name='tria_dueling_ddqn_q_eval',
                                    chkpt_dir=self.chkpt_dir)
 
         self.q_next = DuelingDeepQNetwork(self.lr, self.n_actions,
                                    input_dims=self.input_dims,
-                                   name='lunar_lander_dueling_ddqn_q_next',
+                                   name='tria_dueling_ddqn_q_next',
                                    chkpt_dir=self.chkpt_dir)
 
     def choose_action(self, observation):
         if np.random.random() > self.epsilon:
             state = T.tensor(np.array(observation),dtype=T.float).to(self.q_eval.device)
             _, advantage = self.q_eval.forward(state)
+            #print('>>>advantage:', advantage)
             action = T.argmax(advantage).item()
         else:
             action = np.random.choice(self.action_space)
