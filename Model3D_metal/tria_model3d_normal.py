@@ -12,7 +12,7 @@ from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.logger import HParam
 
-class HParamCallback(BaseCallback):
+class HyperParameterCallback(BaseCallback):
     """
     Saves the hyperparameters and metrics at the start of the training, and logs them to TensorBoard.
     """
@@ -34,7 +34,7 @@ class HParamCallback(BaseCallback):
             "train/value_loss": 0.0,
         }
         self.logger.record(
-            "hparams",
+            "hyper parameters",
             HParam(hparam_dict, metric_dict),
             exclude=("stdout", "log", "json", "csv"),
         )
@@ -47,11 +47,11 @@ import tria_rl
 env_id = 'tria_rl/TriaClimate-v0'
 env_s = gym.make(env_id)
 
-print('---- observation space ----')
+print('---- observation space attributes ----')
 print('observation space size:   ',env_s.observation_space.shape[0])
 print('observation space sample: ',env_s.observation_space.sample)
 
-print('---- action space ----')
+print('---- action space attributes ----')
 print('action space: ', env_s.action_space)
 print('action space sample: ', env_s.action_space.sample())
 
@@ -82,7 +82,7 @@ model = A2C(policy = "MlpPolicy",
             verbose=1,
             tensorboard_log=log_path)
 
-model.learn(total_timesteps=20000000, callback=HParamCallback())
+model.learn(total_timesteps=20000000, callback=HyperParameterCallback())
 
 tria_a2c_model_path = os.path.join('train','save', "tria_a2c_normalized")
 
@@ -98,7 +98,7 @@ env_s.close()
 
 print('* * * Tria A2C model for tria 3D environment predictions * * *')
 
-episodes=10
+episodes=1000
 for episode in range(1, episodes+1):
     observation = env_s.reset()
     terminated = False
