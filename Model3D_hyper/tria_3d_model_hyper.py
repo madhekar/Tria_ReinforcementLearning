@@ -17,7 +17,7 @@ from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env import VecEnv
 from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import VecFrameStack
-from stable_baselines3.common.vec_env import DummyVecEnv
+#from stable_baselines3.common.vec_env import DummyVecEnv
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 
@@ -152,17 +152,17 @@ def objective(trial: optuna.Trial) -> float:
     
     import tria_rl
 
-    '''
+    
     env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
 
     env = DummyVecEnv([lambda: env])
 
     eval_envs = VecNormalize(env, norm_obs=True, norm_reward= True)
-    '''
+    
 
     #eval_envs = VecFrameStack(eval_envs, n_stack=4)
     
-    eval_envs = make_vec_env(env_name, n_eval_envs)
+    ##eval_envs = make_vec_env(env_name, n_eval_envs)
     # Create the callback that will periodically evaluate
     # and report the performance
     eval_callback = TriaTrialEvalCallback(
