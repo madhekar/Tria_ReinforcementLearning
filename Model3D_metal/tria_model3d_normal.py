@@ -3,6 +3,7 @@ import numpy as np
 
 import gym
 from gym import Env
+import torch as th
 
 from stable_baselines3 import A2C
 from stable_baselines3.common.evaluation import evaluate_policy
@@ -68,11 +69,12 @@ model = A2C(policy = "MlpPolicy",
             gae_lambda = 0.8979709455838538,#1.0, #0.117120962797502,
             gamma =  0.9657236425464014,#0.99,#0.80, #0.0016248762308103,
             learning_rate = 1.0767603107498563e-08,#0.0007,#1.7072936513375555e-01,
-            max_grad_norm = 4.565654908777005#0.5,
+            max_grad_norm = 4.565654908777005,#0.5,
             n_steps = 64,#8,
             vf_coef =0.0024435757218033904,#0.5, # 0.00200901228628941,
             ent_coef = 0.04553259441269758,#0.0,
             policy_kwargs=dict(
+            activation_fn=th.nn.Tanh, 
             log_std_init=-2, 
             ortho_init=False),
             normalize_advantage=False,
