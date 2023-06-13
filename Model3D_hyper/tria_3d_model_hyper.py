@@ -50,29 +50,37 @@ timeout = int(60 * 15)
 delafult_hyperparams = {
     'policy' :  'MlpPolicy',
     'env' : env_name,
-    'seed' : 1234,
+    'seed' : 0,
     #'use_rms_prop' : True
 }
 
 def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
 
-    gamma = 1.0 - trial.suggest_float("gamma", 0.0001, 0.1, log=True)
+    #gamma = 1.0 - trial.suggest_float("gamma", 0.0001, 0.1, log=True)
+    gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
     
     max_grad_norm = trial.suggest_float("max_grad_norm", 0.3, 5.0, log=True)
 
     vf_coef = trial.suggest_float("vf_coef", 0.001, 1, log=True)
+    #vf_coef = trial.suggest_uniform('vf_coef', 0, 1)
     
     gae_lambda = 1.0 - trial.suggest_float("gae_lambda", 0.001, 0.2, log=True)
     
-    n_steps = 2 ** trial.suggest_int("exponent_n_steps", 3, 10, log=True)
+    #n_steps = 2 ** trial.suggest_int("exponent_n_steps", 3, 10, log=True)
+    n_steps = trial.suggest_categorical('n_steps', [8, 16, 32, 64, 128, 256, 512, 1024, 2048])
     
     learning_rate = trial.suggest_float("lr", 1e-8, 0.1, log=True)
+    #learning_rate = trial.suggest_loguniform('lr', 1e-5, 1)
+
+    #lr_schedule = trial.suggest_categorical('lr_schedule', ['linear', 'constant'])
     
     ent_coef = trial.suggest_float("ent_coef", 0.00000001, 0.1, log=True)
 
     rms_prop_eps = trial.suggest_float('rms_prop_eps',1e-05, 1e-02, log=True )
     
     ortho_init = trial.suggest_categorical("ortho_init", [False, True])
+
+    #normalize = trial.suggest_categorical('normalize', [True, False])
     
     net_arch = trial.suggest_categorical("net_arch", ["tiny", "small", "mid", "large"])
     
@@ -89,13 +97,13 @@ def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
     
     #neural network selection choice
     if (net_arch == "tiny"): 
-        net_arch = {"pi": [400], "vf": [300]} 
+        net_arch = {"pi": [64], "vf": [64]} 
     elif net_arch == "small":
-        net_arch = {"pi": [400, 400], "vf": [300, 300]}
+        net_arch = {"pi": [64, 64], "vf": [400, 300]}
     elif net_arch == "mid":
-        net_arch = {"pi":[400, 400, 400], "vf":[300, 300, 300]}
+        net_arch = {"pi":[64, 64, 64], "vf":[400, 300, 300]}
     else:
-        net_arch = {"pi":[400,400,400,400], "vf":[300,300,300,300]}   
+        net_arch = {"pi":[64,64,64,64], "vf":[400,400,300,300]}   
      
     # activation / non-linearity selection 
     activation_fn = {
@@ -109,10 +117,12 @@ def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
         "gamma": gamma,
         "gae_lambda": gae_lambda,
         "learning_rate": learning_rate,
+        #"lr_schedule": lr_schedule,
         "ent_coef": ent_coef,
         'vf_coef' : vf_coef,
         'rms_prop_eps': rms_prop_eps,
         "max_grad_norm": max_grad_norm,
+        #"normalize": normalize,
         "policy_kwargs": {
             "net_arch": net_arch,
             "activation_fn": activation_fn,
@@ -146,23 +156,24 @@ def objective(trial: optuna.Trial) -> float:
     kwargs = delafult_hyperparams.copy()
     # Tria hyperparameters
     kwargs.update(tria_a2c_params(trial))
+    print('>>', kwargs)
     # Create the RL model
     model = A2C(**kwargs)
     # Create env used for evaluation
     
     import tria_rl
 
-    
+    '''
     env = gym.make('tria_rl/TriaClimate-v0') #TriaEnv()
 
     env = DummyVecEnv([lambda: env])
 
     eval_envs = VecNormalize(env, norm_obs=True, norm_reward= True)
-    
+    '''
 
     #eval_envs = VecFrameStack(eval_envs, n_stack=4)
     
-    ##eval_envs = make_vec_env(env_name, n_eval_envs)
+    eval_envs = make_vec_env(env_name, n_eval_envs)
     # Create the callback that will periodically evaluate
     # and report the performance
     eval_callback = TriaTrialEvalCallback(

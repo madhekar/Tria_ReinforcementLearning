@@ -66,13 +66,13 @@ log_path = os.path.join('train', 'log')
 
 model = A2C(policy = "MlpPolicy",
             env = env_s,
-            gae_lambda = 0.8979709455838538,#1.0, #0.117120962797502,
-            gamma =  0.9657236425464014,#0.99,#0.80, #0.0016248762308103,
-            learning_rate = 1.0767603107498563e-08,#0.0007,#1.7072936513375555e-01,
-            max_grad_norm = 4.565654908777005,#0.5,
-            n_steps = 64,#8,
-            vf_coef =0.0024435757218033904,#0.5, # 0.00200901228628941,
-            ent_coef = 0.04553259441269758,#0.0,
+            gae_lambda = 0.042,#0.8979709455838538,#1.0, #0.117120962797502,
+            gamma =  0.995,#0.9657236425464014,#0.99,#0.80, #0.0016248762308103,
+            learning_rate = 0.051,#1.0767603107498563e-08,#0.0007,#1.7072936513375555e-01,
+            max_grad_norm = 0.88,#4.565654908777005,#0.5,
+            n_steps = 256,#8,
+            vf_coef = 0.11,#0.0024435757218033904,#0.5, # 0.00200901228628941,
+            ent_coef = 1.0976520036433521e-08,#0.04553259441269758,#0.0,
             policy_kwargs=dict(
             activation_fn=th.nn.Tanh, 
             log_std_init=-2, 
@@ -110,6 +110,7 @@ for episode in range(1, episodes+1):
         action, _ = model.predict(observation)
         observation, reward, terminated , info = env_s.step(action)
         score += reward
+        print('observation: {} action: {} reward: {}'.format(observation, action, reward));
     print('Model Name: {} Episone:{} Score:{}'.format( "tria_a2c_normalized", episode, score))
 
 env_s.close() 
