@@ -60,7 +60,7 @@ print('action space sample: ', env_s.action_space.sample())
 
 env_s = DummyVecEnv([lambda: env_s])
 
-env_s = VecNormalize(env_s, norm_obs=True, norm_reward=True)
+#env_s = VecNormalize(env_s, norm_obs=True, norm_reward=True)
 
 log_path = os.path.join('train', 'log')
 
@@ -74,7 +74,6 @@ model = A2C(policy = "MlpPolicy",
             vf_coef = 0.11,#0.0024435757218033904,#0.5, # 0.00200901228628941,
             ent_coef = 1.0976520036433521e-08,#0.04553259441269758,#0.0,
             policy_kwargs=dict(
-            activation_fn=th.nn.Tanh, 
             log_std_init=-2, 
             ortho_init=False),
             normalize_advantage=False,
@@ -107,7 +106,7 @@ for episode in range(1, episodes+1):
     score = 0
     while not terminated:
         #env.render()
-        action, _ = model.predict(observation)
+        action, _ = model.predict(observation, deterministic=True)
         observation, reward, terminated , info = env_s.step(action)
         score += reward
         print('observation: {} action: {} reward: {}'.format(observation, action, reward));
