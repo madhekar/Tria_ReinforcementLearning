@@ -83,7 +83,7 @@ model = A2C(policy = "MlpPolicy",
             verbose=1,
             tensorboard_log=log_path)
 
-model.learn(total_timesteps=200, callback=HyperParameterCallback())
+model.learn(total_timesteps=90000000, callback=HyperParameterCallback())
 
 tria_a2c_model_path = os.path.join('train','save', "tria_a2c_normalized")
 
