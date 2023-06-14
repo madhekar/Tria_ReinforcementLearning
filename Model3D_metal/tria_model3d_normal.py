@@ -60,18 +60,18 @@ print('action space sample: ', env_s.action_space.sample())
 
 env_s = DummyVecEnv([lambda: env_s])
 
-#env_s = VecNormalize(env_s, norm_obs=True, norm_reward=True)
+env_s = VecNormalize(env_s, training=True, norm_obs=True, norm_reward=True, epsilon=1e-08, gamma=0.99)
 
 log_path = os.path.join('train', 'log')
 
 model = A2C(policy = "MlpPolicy",
             env = env_s,
-            gae_lambda = 0.042,#0.8979709455838538,#1.0, #0.117120962797502,
+            gae_lambda = 0.89,#0.8979709455838538,#1.0, #0.117120962797502,
             gamma =  0.995,#0.9657236425464014,#0.99,#0.80, #0.0016248762308103,
-            learning_rate = 0.051,#1.0767603107498563e-08,#0.0007,#1.7072936513375555e-01,
+            learning_rate = 0.0007,#1.0767603107498563e-08,#0.0007,#1.7072936513375555e-01,
             max_grad_norm = 0.88,#4.565654908777005,#0.5,
-            n_steps = 256,#8,
-            vf_coef = 0.11,#0.0024435757218033904,#0.5, # 0.00200901228628941,
+            n_steps = 16,#8,
+            vf_coef = 0.51,#0.0024435757218033904,#0.5, # 0.00200901228628941,
             ent_coef = 1.0976520036433521e-08,#0.04553259441269758,#0.0,
             policy_kwargs=dict(
             log_std_init=-2, 
@@ -83,7 +83,7 @@ model = A2C(policy = "MlpPolicy",
             verbose=1,
             tensorboard_log=log_path)
 
-model.learn(total_timesteps=20000000, callback=HyperParameterCallback())
+model.learn(total_timesteps=200, callback=HyperParameterCallback())
 
 tria_a2c_model_path = os.path.join('train','save', "tria_a2c_normalized")
 
@@ -109,7 +109,7 @@ for episode in range(1, episodes+1):
         action, _ = model.predict(observation, deterministic=True)
         observation, reward, terminated , info = env_s.step(action)
         score += reward
-        print('observation: {} action: {} reward: {}'.format(observation, action, reward));
+        print('norm_obs: {} observation: {} action: {} norm reward: {} reward: {}'.format(observation, env_s.get_original_obs(), action, reward, env_s.get_original_reward()));
     print('Model Name: {} Episone:{} Score:{}'.format( "tria_a2c_normalized", episode, score))
 
 env_s.close() 
