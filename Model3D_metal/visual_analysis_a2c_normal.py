@@ -15,35 +15,6 @@ from stable_baselines3.common.logger import HParam
 
 from helper import plots_norm
 
-class HyperParameterCallback(BaseCallback):
-    """
-    Saves the hyperparameters and metrics at the start of the training, and logs them to TensorBoard.
-    """
-
-    def _on_training_start(self) -> None:
-        hparam_dict = {
-            "algorithm": self.model.__class__.__name__,
-            "learning rate": self.model.learning_rate,
-            "gamma": self.model.gamma,
-            "gae_lambda": self.model.gae_lambda,
-            "ent_coef": self.model.ent_coef,
-            "vf_coef": self.model.vf_coef,
-            "max_grad_norm": self.model.max_grad_norm
-        }
-        # define the metrics that will appear in the `HPARAMS` Tensorboard tab by referencing their tag
-        # Tensorbaord will find & display metrics from the `SCALARS` tab
-        metric_dict = {
-            "rollout/ep_len_mean": 0,
-            "train/value_loss": 0.0,
-        }
-        self.logger.record(
-            "hyper parameters",
-            HParam(hparam_dict, metric_dict),
-            exclude=("stdout", "log", "json", "csv"),
-        )
-
-    def _on_step(self) -> bool:
-        return True
 
 import tria_rl
 #env = gym.make('tria_rl/TriaClimate-v0')
@@ -66,32 +37,7 @@ env_s = VecNormalize(env_s, training=True, norm_obs=True, norm_reward=True, epsi
 
 log_path = os.path.join('train', 'log')
 
-model = A2C(policy = "MlpPolicy",
-            env = env_s,
-            gae_lambda = 0.89,#0.8979709455838538,#1.0, #0.117120962797502,
-            gamma =  0.995,#0.9657236425464014,#0.99,#0.80, #0.0016248762308103,
-            learning_rate = 0.0007,#1.0767603107498563e-08,#0.0007,#1.7072936513375555e-01,
-            max_grad_norm = 0.88,#4.565654908777005,#0.5,
-            n_steps = 100,#8,
-            vf_coef = 0.51,#0.0024435757218033904,#0.5, # 0.00200901228628941,
-            ent_coef = 1.0976520036433521e-08,#0.04553259441269758,#0.0,
-            policy_kwargs=dict(
-            log_std_init=-2, 
-            ortho_init=False),
-            normalize_advantage=False,
-            rms_prop_eps=1e-07, 
-            use_rms_prop= True,
-            #use_sde= True,
-            verbose=1,
-            tensorboard_log=log_path)
-
-model.learn(total_timesteps=30000000, callback=HyperParameterCallback())
-
 tria_a2c_model_path = os.path.join('train','save', "tria_a2c_normalized")
-
-model.save(tria_a2c_model_path)
-
-del model
 
 model = A2C.load(tria_a2c_model_path, env=env_s)
 
@@ -105,7 +51,9 @@ episodes=1000
 plot_scores= [[0] * episodes for i in range(2)]
 plot_mean_scores=[[0] * episodes for i in range(2)]
 for episode in range(1, episodes):
-    observation = env_s.reset()
+    env_s.state = np.array([[81, 61, 201 ]])#env_s.reset()
+    observation = np.array([[81, 61, 201 ]])
+    print('>>obs>>',observation)
     terminated = False
     score = 0
     norm_score=0
