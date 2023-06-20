@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import random
-
+import csv
 import gym
 from gym import Env
 import torch as th
@@ -76,36 +76,29 @@ model = A2C.load(tria_a2c_model_path, env=env_s)
 
 print('* * * Tria A2C model for tria 3D environment predictions * * *')
 
-episodes=1000
-it = 1234
-random.seed(it)
-np.random.seed(it)
-env_s.seed(it)
-env_s.action_space.seed(it)
-env_s.reset()
-#env_s.state = np.array([[81, 61, 201 ]])
+episodes=100
+
 plot_scores= [[0] * episodes for i in range(2)]
 plot_mean_scores=[[0] * episodes for i in range(2)]
 for episode in range(1, episodes):
-    #observation = env_s.reset(state=np.array([[81, 61, 201 ]]), cycles=100)
     observation = env_s.reset()
-    #env_s.set_state(np.array( [[81, 61, 201]]))
-    #env_s.state =  env_s.unwrapped.state = np.array([[81, 61, 201]])#env_s.reset(state=np.array([[81, 61, 201 ]]), cycles=100)
-    #observation = env_s.reset() #np.array(list(env_s.toarray.unwrapped.state))#np.array( [[81, 61, 201]])
-    #print('>>obs>>',observation)
     terminated = False
     score = 0
     norm_score=0
     game=0
+    #data = []
     while not terminated:
-        #env.render()
+        #d=[]
         action, _ = model.predict(observation, deterministic=True)
         observation, norm_reward, terminated , info = env_s.step(action)
         norm_score += norm_reward
         score +=env_s.get_original_reward()
         game +=1
+        #print(list(env_s.get_original_obs()))
+        #d.append(list(list(env_s.get_original_obs()))) #.append(action).append(list(env_s.get_original_reward()))
         #print('norm_obs: {} observation: {} action: {} norm reward: {} reward: {}'.format(observation, env_s.get_original_obs(), action, norm_reward, env_s.get_original_reward()));
     print('Model Name: {} Episone:{} Score:{}'.format( "tria_a2c_normalized", episode, score))
+    #data.append(d)
     mean_norm_score = norm_score / game
     mean_score = score / game
     plot_scores[0][episode] =  score 
@@ -114,6 +107,12 @@ for episode in range(1, episodes):
     plot_scores[1][episode] =  norm_score 
     plot_mean_scores[1][episode] = mean_norm_score 
 
+    #header = ['t_st', 'h_st', 'a_st', 'r', 'a']
+    #with open('tria_a2c_norm', 'w', encoding='utf8', newline='') as f:
+    #  writer = csv.writer(f)
+    #  writer.writerow(header)
+    #  writer.writerows(data)  
+    #f.close()  
 env_s.close() 
 
 print('------------------------------------------------------------------')
