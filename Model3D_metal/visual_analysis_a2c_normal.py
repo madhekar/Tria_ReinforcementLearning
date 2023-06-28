@@ -79,9 +79,9 @@ tria_a2c_model_path = os.path.join('train','save', "tria_a2c_normalized")
 
 model = A2C.load(tria_a2c_model_path, env=env_s)
 
-#evaluate_policy(model, env_s, n_eval_episodes=20, render=False)
+evaluate_policy(model, env_s, n_eval_episodes=20, render=False)
 
-#env_s.close()
+env_s.close()
 
 print('* * * Tria A2C model for tria 3D environment predictions * * *')
 
@@ -99,7 +99,7 @@ for episode in range(1, episodes):
     actions = []
     color = []
     while not terminated:
-        action, _ = model.predict(observation, deterministic=False)
+        action, _ = model.predict(observation, deterministic=True)
         observation, norm_reward, terminated , info = env_s.step(action)
         norm_score += norm_reward
         score +=env_s.get_original_reward()
