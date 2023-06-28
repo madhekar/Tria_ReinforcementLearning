@@ -16,7 +16,7 @@ from gym.spaces import Discrete, Dict, Box
 from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.logger import HParam
 
-from helper import plots_norm
+from helper import plots_norm, plots_3d
 
 import tria_rl
 env_id = 'tria_rl/TriaClimate-v0'
@@ -76,7 +76,7 @@ model = A2C.load(tria_a2c_model_path, env=env_s)
 
 print('* * * Tria A2C model for tria 3D environment predictions * * *')
 
-episodes=100
+episodes=5
 
 plot_scores= [[0] * episodes for i in range(2)]
 plot_mean_scores=[[0] * episodes for i in range(2)]
@@ -86,7 +86,8 @@ for episode in range(1, episodes):
     score = 0
     norm_score=0
     game=0
-    #data = []
+    observations = []
+    actions = []
     while not terminated:
         #d=[]
         action, _ = model.predict(observation, deterministic=True)
@@ -94,6 +95,8 @@ for episode in range(1, episodes):
         norm_score += norm_reward
         score +=env_s.get_original_reward()
         game +=1
+        actions.append(action.tolist()[0])
+        observations.append(observation.ravel().tolist())
         #print(list(env_s.get_original_obs()))
         #d.append(list(list(env_s.get_original_obs()))) #.append(action).append(list(env_s.get_original_reward()))
         #print('norm_obs: {} observation: {} action: {} norm reward: {} reward: {}'.format(observation, env_s.get_original_obs(), action, norm_reward, env_s.get_original_reward()));
@@ -106,6 +109,9 @@ for episode in range(1, episodes):
 
     plot_scores[1][episode] =  norm_score 
     plot_mean_scores[1][episode] = mean_norm_score 
+    observations = np.array(observations)
+    print(observations, ' : ', actions)
+    plots_3d(observations[:,0], observations[:,1], observations[:,2], actions)
 
     #header = ['t_st', 'h_st', 'a_st', 'r', 'a']
     #with open('tria_a2c_norm', 'w', encoding='utf8', newline='') as f:

@@ -71,3 +71,16 @@ def plots_norm(scores, mean_scores):
     ax[1].plot(freq,mean_scores[1])
 
     plt.show()    
+
+def plots_3d(tv, hv, av, acv):
+    fig = plt.figure()
+    ax = fig.add_subplot(111,projection = '3d') 
+    ax.plot(tv,hv,av,'.')
+
+    for t,h,a,ac in zip(tv,av,av,acv):
+        ax.text(t,h,a,ac)
+    ax.set_xlabel("temperature")
+    ax.set_ylabel("humidity")
+    ax.set_zlabel("air quality")
+
+    plt.show()
