@@ -73,14 +73,15 @@ def plots_norm(scores, mean_scores):
     plt.show()    
 
 def plots_3d(tv, hv, av, acv,color):
-    fig = plt.figure(figsize=(10,10))
+    fig = plt.figure(figsize=(15,8))
+    fig.tight_layout()
+
     ax = fig.add_subplot(111,projection = '3d') 
     ax.scatter(tv,hv,av,'o',c=color)
-
-    for t,h,a,ac in zip(tv,av,av,acv):
-      ax.text(t,h,a,ac)
     ax.set_xlabel("temperature")
     ax.set_ylabel("humidity")
     ax.set_zlabel("air quality")
+    for t,h,a,ac in zip(tv,av,av,acv):
+      ax.text(t,h,a,ac)
 
     plt.show()

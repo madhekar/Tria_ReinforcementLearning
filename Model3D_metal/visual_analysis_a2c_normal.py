@@ -99,8 +99,7 @@ for episode in range(1, episodes):
     actions = []
     color = []
     while not terminated:
-        #d=[]
-        action, _ = model.predict(observation, deterministic=True)
+        action, _ = model.predict(observation, deterministic=False)
         observation, norm_reward, terminated , info = env_s.step(action)
         norm_score += norm_reward
         score +=env_s.get_original_reward()
