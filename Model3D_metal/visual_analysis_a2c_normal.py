@@ -50,6 +50,15 @@ env_s = gym.make(env_id)
 
 env_s = TriaEnv() """
 
+def getColor (reward):
+    if reward <=30 and reward >= 10:
+        return 'green'
+    elif reward < 10 and reward > -10:
+        return 'blue'
+    else: 
+        return 'red'
+
+
 print('---- observation space attributes ----')
 print('observation space size:   ',env_s.observation_space.shape[0])
 print('observation space sample: ',env_s.observation_space.sample)
@@ -88,6 +97,7 @@ for episode in range(1, episodes):
     game=0
     observations = []
     actions = []
+    color = []
     while not terminated:
         #d=[]
         action, _ = model.predict(observation, deterministic=True)
@@ -96,7 +106,9 @@ for episode in range(1, episodes):
         score +=env_s.get_original_reward()
         game +=1
         actions.append(action.tolist()[0])
-        observations.append(observation.ravel().tolist())
+        obs = env_s.get_original_obs().ravel().tolist()
+        color.append(getColor(env_s.get_original_reward()[0]))
+        observations.append(obs)
         #print(list(env_s.get_original_obs()))
         #d.append(list(list(env_s.get_original_obs()))) #.append(action).append(list(env_s.get_original_reward()))
         #print('norm_obs: {} observation: {} action: {} norm reward: {} reward: {}'.format(observation, env_s.get_original_obs(), action, norm_reward, env_s.get_original_reward()));
@@ -111,7 +123,7 @@ for episode in range(1, episodes):
     plot_mean_scores[1][episode] = mean_norm_score 
     observations = np.array(observations)
     print(observations, ' : ', actions)
-    plots_3d(observations[:,0], observations[:,1], observations[:,2], actions)
+    plots_3d(observations[:,0], observations[:,1], observations[:,2], actions, color)
 
     #header = ['t_st', 'h_st', 'a_st', 'r', 'a']
     #with open('tria_a2c_norm', 'w', encoding='utf8', newline='') as f:
