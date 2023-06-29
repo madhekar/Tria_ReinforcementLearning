@@ -72,8 +72,9 @@ def plots_norm(scores, mean_scores):
 
     plt.show()    
 
-def plots_3d(tv, hv, av, acv,color):
-    fig = plt.figure(figsize=(15,8))
+def plots_3d(obs, acv,color):
+    print(np.array(obs[1])[:,0])
+"""     fig = plt.figure(figsize=(15,8))
     fig.tight_layout()
 
     ax = fig.add_subplot(111,projection = '3d') 
@@ -84,4 +85,4 @@ def plots_3d(tv, hv, av, acv,color):
     for t,h,a,ac in zip(tv,av,av,acv):
       ax.text(t,h,a,ac)
 
-    plt.show()
+    plt.show() """

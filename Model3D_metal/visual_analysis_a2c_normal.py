@@ -89,28 +89,30 @@ episodes=5
 
 plot_scores= [[0] * episodes for i in range(2)]
 plot_mean_scores=[[0] * episodes for i in range(2)]
+#act_obs_clr =[[0]* episodes, [[]]* episodes, [''] * episodes]
+act = [[i] for i in range(1, episodes)]
+obs = [[i] for i in range(1, episodes)]
+clrs = [[i] for i in range(1, episodes)]
 for episode in range(1, episodes):
     observation = env_s.reset()
     terminated = False
     score = 0
     norm_score=0
     game=0
-    observations = []
-    actions = []
-    color = []
+    act.append([])
+    obs.append([])
+    clrs.append([])
     while not terminated:
         action, _ = model.predict(observation, deterministic=True)
         observation, norm_reward, terminated , info = env_s.step(action)
         norm_score += norm_reward
         score +=env_s.get_original_reward()
         game +=1
-        actions.append(action.tolist()[0])
-        obs = env_s.get_original_obs().ravel().tolist()
-        color.append(getColor(env_s.get_original_reward()[0]))
-        observations.append(obs)
-        #print(list(env_s.get_original_obs()))
-        #d.append(list(list(env_s.get_original_obs()))) #.append(action).append(list(env_s.get_original_reward()))
-        #print('norm_obs: {} observation: {} action: {} norm reward: {} reward: {}'.format(observation, env_s.get_original_obs(), action, norm_reward, env_s.get_original_reward()));
+        #print(act, action.tolist()[0])
+        act[episode].append(action.tolist()[0])
+        ob = env_s.get_original_obs().ravel().tolist()
+        clrs[episode].append(getColor(env_s.get_original_reward()[0]))
+        obs[episode].append(ob)
     print('Model Name: {} Episone:{} Score:{}'.format( "tria_a2c_normalized", episode, score))
     #data.append(d)
     mean_norm_score = norm_score / game
@@ -120,9 +122,9 @@ for episode in range(1, episodes):
 
     plot_scores[1][episode] =  norm_score 
     plot_mean_scores[1][episode] = mean_norm_score 
-    observations = np.array(observations)
-    print(observations, ' : ', actions)
-    plots_3d(observations[:,0], observations[:,1], observations[:,2], actions, color)
+    #observations = np.array(observations)
+    #print(act[1], ' : ', obs[1], ' : ', clrs[1])
+    #plots_3d(act, obs, clrs)
 
     #header = ['t_st', 'h_st', 'a_st', 'r', 'a']
     #with open('tria_a2c_norm', 'w', encoding='utf8', newline='') as f:
@@ -134,5 +136,5 @@ env_s.close()
 
 print('------------------------------------------------------------------')
 
-
+plots_3d(obs,act, clrs)
 plots_norm(plot_scores, plot_mean_scores)
