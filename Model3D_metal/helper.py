@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 from IPython import display
 import numpy as np
-
+import warnings
+warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning) 
 #plt.ion()
 
 def plot(scores, mean_scores):
@@ -72,17 +73,25 @@ def plots_norm(scores, mean_scores):
 
     plt.show()    
 
-def plots_3d(obs, acv,color):
-    print(np.array(obs[1])[:,0])
-"""     fig = plt.figure(figsize=(15,8))
-    fig.tight_layout()
+def plots_3d(obs,acv,color):
+    rows, cols = 2, 2
+    fig, ax = plt.subplots(nrows=rows,ncols=cols, figsize=(15,8), subplot_kw=dict(projection='3d'))
+    fig.suptitle('Tria A2C model predictions', fontsize=12)
 
-    ax = fig.add_subplot(111,projection = '3d') 
-    ax.scatter(tv,hv,av,'o',c=color)
-    ax.set_xlabel("temperature")
-    ax.set_ylabel("humidity")
-    ax.set_zlabel("air quality")
-    for t,h,a,ac in zip(tv,av,av,acv):
-      ax.text(t,h,a,ac)
+    for row in range(rows):
+        for col in range(cols):
+            ax[row, col].scatter(obs[row + col][:,0],obs[row + col][:,1],obs[row + col][:,2],'.', c = color[row+col] ) 
+            ax[row, col].set_title('initial obs:' + str(round(obs[row + col][0:,0][0],2))+ ':' + str(round(obs[row + col][0:,1][0],2))+ ':' +str(round(obs[row + col][0:,2][0],2)), fontsize=8)
+            ax[row, col].set_xlabel("temperature")
+            ax[row, col].set_ylabel("humidity")
+            ax[row, col].set_zlabel("air quality")
+            for t,h,a,ac in zip(obs[row + col][:,0],obs[row + col][:,1],obs[row + col][:,2],acv[row + col]):
+               ax[row, col].text(t,h,a,ac, fontsize=4)
 
-    plt.show() """
+    plt.subplots_adjust(left=0.13,
+                    bottom=0.044,
+                    right=0.91,
+                    top=0.915,
+                    wspace=0.32,
+                    hspace=0.158)           
+    plt.show()
