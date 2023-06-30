@@ -16,7 +16,7 @@ from gym.spaces import Discrete, Dict, Box
 from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.logger import HParam
 
-from helper import plots_norm, plots_3d
+from helper import plots_norm, plots_3d, plotPredictions
 
 import tria_rl
 env_id = 'tria_rl/TriaClimate-v0'
@@ -82,6 +82,7 @@ plot_mean_scores=[[0] * episodes for i in range(2)]
 acts = []
 obss = []
 clrss = []
+rwds = [] 
 for episode in range(1, episodes):
     observation = env_s.reset()
     terminated = False
@@ -91,6 +92,7 @@ for episode in range(1, episodes):
     act=[]
     obs=[]
     clrs=[]
+    rwd = []
     while not terminated:
         action, _ = model.predict(observation, deterministic=True)
         observation, norm_reward, terminated , info = env_s.step(action)
@@ -102,7 +104,9 @@ for episode in range(1, episodes):
         ob = env_s.get_original_obs().ravel().tolist()
         clrs.append(getColor(env_s.get_original_reward()[0]))
         obs.append(ob)
-        print('E: {} O: {} A: {} AE: {} R: {}'.format( episode, [str(round(o,2)) for o in ob], action.tolist()[0], actions[action.tolist()[0]], env_s.get_original_reward()))
+        r = env_s.get_original_reward().tolist()[0]
+        rwd.append(r)
+        print('E: {} O: {} A: {} AE: {} R: {}'.format( episode, [str(round(o,2)) for o in ob], action.tolist()[0], actions[action.tolist()[0]], r))
     print('Model Name: {} Episone:{} Score:{}'.format( "tria_a2c_normalized", episode, score))
     
     mean_norm_score = norm_score / game
@@ -116,12 +120,13 @@ for episode in range(1, episodes):
     acts.append(act)
     obss.append(obs)
     clrss.append(clrs)
+    rwds.append(rwd)
 
     #print(np.array(obss))
 env_s.close() 
 
 print('------------------------------------------------------------------')
 
-#print(np.array(obss)[0][:,0])
 plots_3d(np.array(obss),acts,clrss)
-plots_norm(plot_scores, plot_mean_scores)
+plotPredictions(rwds, obs, acts, clrss)
+#plots_norm(plot_scores, plot_mean_scores)

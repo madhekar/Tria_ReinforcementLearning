@@ -95,3 +95,24 @@ def plots_3d(obs,acv,color):
                     wspace=0.32,
                     hspace=0.158)           
     plt.show()
+
+def plotPredictions(rws, obs, acv, color):
+    rows, cols = 2, 2
+    fig, ax = plt.subplots(nrows=rows,ncols=cols, figsize=(15,8))
+    fig.suptitle('Tria A2C model predictions learning trend', fontsize=12)
+    x = np.arange(0, 100, dtype=int)
+
+    for row in range(rows):
+        for col in range(cols):
+            ax[row, col].plot(x, rws[row + col], marker= 'o', linestyle="dotted", markersize=2) 
+            ax[row, col].set_title('Reward Trend Episode: ' + str(row + col), fontsize=8)
+            #ax[row, col].set_xlabel("step")
+            ax[row, col].set_ylabel("reward")
+
+    plt.subplots_adjust(left=0.13,
+                    bottom=0.044,
+                    right=0.91,
+                    top=0.915,
+                    wspace=0.32,
+                    hspace=0.158)           
+    plt.show()
