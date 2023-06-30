@@ -74,7 +74,7 @@ env_s.close()
 
 print('* * * Tria A2C model for tria 3D environment predictions * * *')
 
-episodes=5
+episodes=4
 
 plot_scores= [[0] * episodes for i in range(2)]
 plot_mean_scores=[[0] * episodes for i in range(2)]
@@ -83,7 +83,7 @@ acts = []
 obss = []
 clrss = []
 rwds = [] 
-for episode in range(1, episodes):
+for episode in range(0, episodes):
     observation = env_s.reset()
     terminated = False
     score = 0
