@@ -21,34 +21,23 @@ from helper import plots_norm, plots_3d
 import tria_rl
 env_id = 'tria_rl/TriaClimate-v0'
 env_s = gym.make(env_id)
-""" class TriaEnv:
-    def __init__(self, config=None):
-        self.env = gym.make(env_id)
-        self.action_space = Discrete(14)
-        self.observation_space = self.env.observation_space
 
-    def reset(self):
-       return self.env.reset()
-
-    def step(self, action):
-       obs, rew, done, info = self.env.step(action)
-       return obs, rew, done, info
-
-    def set_state(self, state):
-       self.env = deepcopy(state)
-       obs = np.array(list(self.env.unwrapped.state))
-       return obs
-
-    def get_state(self):
-        return deepcopy(self.env)
-
-    def render(self):
-        self.env.render()
-
-    def close(self):
-        self.env.close()
-
-env_s = TriaEnv() """
+actions = {
+    0 : [-.1,-.1,.1],
+    1 : [1,-.1,.1],
+    2 : [-.1,1,.1],
+    3 : [-.1,-.1,-1],
+    4 : [-1,-.3,-.3],
+    5 : [-.1,-1,.1],
+    6 : [1,1,.1],
+    7 : [1,-.1,-1],
+    8 : [1,-1,.1],
+    9 : [1,-.1,-1],
+    10 : [-1,1,.1],
+    11 : [1,1,-1],                   
+    12 : [-1,1,-1],
+    13 : [-1,-1,-1]                                                                                      
+            }  
 
 def getColor (reward):
     if reward <=30 and reward >= 10:
@@ -113,6 +102,7 @@ for episode in range(1, episodes):
         ob = env_s.get_original_obs().ravel().tolist()
         clrs.append(getColor(env_s.get_original_reward()[0]))
         obs.append(ob)
+        print('E: {} O: {} A: {} AE: {} R: {}'.format( episode, [str(round(o,2)) for o in ob], action.tolist()[0], actions[action.tolist()[0]], env_s.get_original_reward()))
     print('Model Name: {} Episone:{} Score:{}'.format( "tria_a2c_normalized", episode, score))
     
     mean_norm_score = norm_score / game
