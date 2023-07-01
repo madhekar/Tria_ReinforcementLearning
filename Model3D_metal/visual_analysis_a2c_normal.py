@@ -93,7 +93,9 @@ for episode in range(0, episodes):
     obs=[]
     clrs=[]
     rwd = []
-    while not terminated:
+    while not terminated:        
+        ob = env_s.get_original_obs().ravel().tolist()
+        obs.append(ob)
         action, _ = model.predict(observation, deterministic=True)
         observation, norm_reward, terminated , info = env_s.step(action)
         norm_score += norm_reward
@@ -101,9 +103,7 @@ for episode in range(0, episodes):
         game +=1
         #print(act, action.tolist()[0])
         act.append(action.tolist()[0])
-        ob = env_s.get_original_obs().ravel().tolist()
         clrs.append(getColor(env_s.get_original_reward()[0]))
-        obs.append(ob)
         r = env_s.get_original_reward().tolist()[0]
         rwd.append(r)
         print('E: {} O: {} A: {} AE: {} R: {}'.format( episode, [str(round(o,2)) for o in ob], action.tolist()[0], actions[action.tolist()[0]], r))
