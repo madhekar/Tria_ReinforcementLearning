@@ -85,8 +85,8 @@ def plots_3d(obs,acv,color):
             ax[row, col].set_xlabel("T")
             ax[row, col].set_ylabel("H")
             ax[row, col].set_zlabel("AQ")
-            #for t,h,a,ac in zip(obs[n][:,0],obs[n][:,1],obs[n][:,2],acv[n]):
-            #   ax[row, col].text(t,h,a,ac, fontsize=4)
+            for t,h,a,ac in zip(obs[n][:,0],obs[n][:,1],obs[n][:,2],acv[n]):
+               ax[row, col].text(t,h,a,ac, fontsize=4)
             n+=1   
 
     plt.subplots_adjust(left=0.13,
