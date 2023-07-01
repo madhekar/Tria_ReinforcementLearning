@@ -74,19 +74,19 @@ def plots_norm(scores, mean_scores):
     plt.show()    
 
 def plots_3d(obs,acv,color):
-    rows, cols = 2, 2
-    fig, ax = plt.subplots(nrows=rows,ncols=cols, figsize=(15,8), subplot_kw=dict(projection='3d'))
-    fig.suptitle('Tria A2C model predictions', fontsize=12)
+    rows, cols = 3, 4
+    fig, ax = plt.subplots(nrows=rows,ncols=cols, figsize=(20,10), subplot_kw=dict(projection='3d'))
+    fig.suptitle('Tria A2C model predictions', fontsize=10)
     n=0
     for row in range(rows):
         for col in range(cols):
             ax[row, col].scatter(obs[n][:,0],obs[n][:,1],obs[n][:,2], c = color[n] ) 
-            ax[row, col].set_title('empisode: '+ str(n) +' initial obs: ' + str(round(obs[n][0:,0][0],2))+ ':' + str(round(obs[n][0:,1][0],2))+ ':' +str(round(obs[n][0:,2][0],2))  + ' || final obs: ' + str(round(obs[n][0:,0][-1],2))+ ':' + str(round(obs[n][0:,1][-1],2)) + ':' + str(round(obs[n][0:,2][-1],2)), fontsize=8)
+            ax[row, col].set_title('empisode: '+ str(n) +' initial obs: ' + str(round(obs[n][0:,0][0],2))+ ':' + str(round(obs[n][0:,1][0],2))+ ':' +str(round(obs[n][0:,2][0],2))  + ' || final obs: ' + str(round(obs[n][0:,0][-1],2))+ ':' + str(round(obs[n][0:,1][-1],2)) + ':' + str(round(obs[n][0:,2][-1],2)), fontsize=3)
             ax[row, col].set_xlabel("T")
             ax[row, col].set_ylabel("H")
             ax[row, col].set_zlabel("AQ")
             for t,h,a,ac in zip(obs[n][:,0],obs[n][:,1],obs[n][:,2],acv[n]):
-               ax[row, col].text(t,h,a,ac, fontsize=4)
+               ax[row, col].text(t,h,a,ac, fontsize=2)
             n+=1   
 
     plt.subplots_adjust(left=0.13,
@@ -98,9 +98,9 @@ def plots_3d(obs,acv,color):
     plt.show()
 
 def plotPredictions(rws, obs, acv, color):
-    rows, cols = 2, 2
-    fig, ax = plt.subplots(nrows=rows,ncols=cols, figsize=(15,8))
-    fig.suptitle('Tria A2C model predictions learning trend', fontsize=12)
+    rows, cols = 3, 4
+    fig, ax = plt.subplots(nrows=rows,ncols=cols, figsize=(20,10))
+    fig.suptitle('Tria A2C model predictions learning trend', fontsize=10)
     x = np.arange(0, 100, dtype=int)
     n=0
     for row in range(rows):
