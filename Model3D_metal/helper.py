@@ -81,7 +81,7 @@ def plots_3d(obs,acv,color):
     for row in range(rows):
         for col in range(cols):
             ax[row, col].scatter(obs[n][:,0],obs[n][:,1],obs[n][:,2], c = color[n] ) 
-            ax[row, col].set_title('empisode: '+ str(n) +' initial obs: ' + str(round(obs[n][0:,0][0],2))+ ':' + str(round(obs[n][0:,1][0],2))+ ':' +str(round(obs[n][0:,2][0],2))  + ' || final obs: ' + str(round(obs[n][0:,0][-1],2))+ ':' + str(round(obs[n][0:,1][-1],2)) + ':' + str(round(obs[n][0:,2][-1],2)), fontsize=3)
+            ax[row, col].set_title('empisode: '+ str(n) +' initial obs: ' + str(round(obs[n][0:,0][0],2))+ ':' + str(round(obs[n][0:,1][0],2))+ ':' +str(round(obs[n][0:,2][0],2))  + ' || final obs: ' + str(round(obs[n][0:,0][-1],2))+ ':' + str(round(obs[n][0:,1][-1],2)) + ':' + str(round(obs[n][0:,2][-1],2)), fontsize=8)
             ax[row, col].set_xlabel("T")
             ax[row, col].set_ylabel("H")
             ax[row, col].set_zlabel("AQ")
