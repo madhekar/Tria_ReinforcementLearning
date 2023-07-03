@@ -68,7 +68,7 @@ tria_a2c_model_path = os.path.join('train','save', "tria_a2c_normalized")
 
 model = A2C.load(tria_a2c_model_path, env=env_s)
 
-evaluate_policy(model, env_s, n_eval_episodes=20, render=False)
+#evaluate_policy(model, env_s, n_eval_episodes=20, render=False)
 
 env_s.close()
 

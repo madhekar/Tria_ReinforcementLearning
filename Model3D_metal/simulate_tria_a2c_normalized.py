@@ -68,14 +68,14 @@ tria_a2c_model_path = os.path.join('train','save', "tria_a2c_normalized")
 
 model = A2C.load(tria_a2c_model_path, env=env_s)
 
-evaluate_policy(model, env_s, n_eval_episodes=20, render=False)
+#evaluate_policy(model, env_s, n_eval_episodes=20, render=False)
 
 env_s.close()
 
 print('* * * Tria A2C model for tria 3D environment predictions * * *')
 
 episodes=4
-max_cascade = 1
+max_cascade = 5
 
 plot_scores= [[0] * episodes for i in range(2)]
 plot_mean_scores=[[0] * episodes for i in range(2)]
