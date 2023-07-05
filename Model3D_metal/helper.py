@@ -148,7 +148,7 @@ def plotSimulation(obs, color, rws, acv):
 
 def update_lines(num, obs, lines):
     for line, ob in zip(lines, obs):
-        print(ob)
+        #print(ob)
         line.set_data(ob[:num, :2].T)
         line.set_3d_properties(ob[:num, 2])
     return lines
@@ -172,9 +172,9 @@ def plotAnimation(obs):
     lines = [ax.plot([],[],[])[0] for _ in walks]
 
     # Setting the axes properties
-    ax.set(xlim3d=(-20, 120), xlabel='T')
-    ax.set(ylim3d=(0, 100), ylabel='H')
-    ax.set(zlim3d=(0, 20000), zlabel='AQ')
+    ax.set(xlim3d=(-120, 120), xlabel='T')
+    ax.set(ylim3d=(-100, 100), ylabel='H')
+    ax.set(zlim3d=(-20000, 20000), zlabel='AQ')
 
 # Creating the Animation object
     ani = animation.FuncAnimation(
