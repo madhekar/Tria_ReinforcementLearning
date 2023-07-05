@@ -170,11 +170,11 @@ def plotAnimation(obs):
     ax = fig.add_subplot(projection='3d')
 
     lines = [ax.plot([],[],[])[0] for _ in walks]
-
+    o = np.array(obs)
     # Setting the axes properties
-    ax.set(xlim3d=(-120, 120), xlabel='T')
-    ax.set(ylim3d=(-100, 100), ylabel='H')
-    ax.set(zlim3d=(-20000, 20000), zlabel='AQ')
+    ax.set(xlim=(np.min(o[0:,0]), np.max(o[0:,0])), xlabel='T')
+    ax.set(ylim=(np.min(o[0:,1]), np.max(o[0:,1])), ylabel='H')
+    ax.set(zlim=(np.min(o[0:,2]), np.max(o[0:,2])), zlabel='AQ')
 
 # Creating the Animation object
     ani = animation.FuncAnimation(
