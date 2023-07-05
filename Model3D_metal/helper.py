@@ -164,6 +164,7 @@ def plotAnimation(obs):
     #print(num_steps)
     
     walks = np.array([observations(obs)])
+    print('walk: ', walks)
 
     fig =plt.figure()
     ax = fig.add_subplot(projection='3d')
@@ -171,9 +172,9 @@ def plotAnimation(obs):
     lines = [ax.plot([],[],[])[0] for _ in walks]
 
     # Setting the axes properties
-    ax.set(xlim3d=(-120, 120), xlabel='T')
-    ax.set(ylim3d=(-100, 100), ylabel='H')
-    ax.set(zlim3d=(-20000, 20000), zlabel='AQ')
+    ax.set(xlim3d=(-20, 120), xlabel='T')
+    ax.set(ylim3d=(0, 100), ylabel='H')
+    ax.set(zlim3d=(0, 20000), zlabel='AQ')
 
 # Creating the Animation object
     ani = animation.FuncAnimation(
