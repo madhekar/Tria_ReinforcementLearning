@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 from IPython import display
 import numpy as np
 import warnings
@@ -144,3 +145,39 @@ def plotSimulation(obs, color, rws, acv):
                     wspace=0.32,
                     hspace=0.158)           
     plt.show()
+
+def update_lines(num, obs, lines):
+    for line, ob in zip(lines, obs):
+        print(ob)
+        line.set_data(ob[:num, :2].T)
+        line.set_3d_properties(ob[:num, 2])
+    return lines
+
+def observations(obs):
+    start_observation = obs[0]
+    walk = start_observation + np.cumsum(obs, axis=0)
+    #print('walk: ', walk)
+    return obs
+    
+def plotAnimation(obs):
+    num_steps = len(obs)
+    #print(num_steps)
+    
+    walks = np.array([observations(obs)])
+
+    fig =plt.figure()
+    ax = fig.add_subplot(projection='3d')
+
+    lines = [ax.plot([],[],[])[0] for _ in walks]
+
+    # Setting the axes properties
+    ax.set(xlim3d=(-120, 120), xlabel='T')
+    ax.set(ylim3d=(-100, 100), ylabel='H')
+    ax.set(zlim3d=(-20000, 20000), zlabel='AQ')
+
+# Creating the Animation object
+    ani = animation.FuncAnimation(
+    fig, update_lines, num_steps, fargs=(walks, lines), interval=100)
+
+    plt.show()
+
