@@ -75,6 +75,8 @@ env_s.close()
 print('* * * Tria A2C model for tria 3D environment predictions * * *')
 
 episodes=12
+rows =3
+cols =4
 
 plot_scores= [[0] * episodes for i in range(2)]
 plot_mean_scores=[[0] * episodes for i in range(2)]
@@ -126,7 +128,7 @@ for episode in range(0, episodes):
 env_s.close() 
 
 print('------------------------------------------------------------------')
-
-plots_3d(np.array(obss),acts,clrss)
-plotPredictions(rwds, obs, acts, clrss)
+#print('>>', len(rwds[0]))
+plots_3d(np.array(obss),acts,clrss, rows, cols)
+plotPredictions(rwds, obs, acts, clrss, rows, cols)
 #plots_norm(plot_scores, plot_mean_scores)

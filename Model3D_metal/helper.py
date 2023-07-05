@@ -73,8 +73,8 @@ def plots_norm(scores, mean_scores):
 
     plt.show()    
 
-def plots_3d(obs,acv,color):
-    rows, cols = 2, 2
+def plots_3d(obs,acv,color, _rows, _cols):
+    rows, cols = _rows, _cols
     fig, ax = plt.subplots(nrows=rows,ncols=cols, figsize=(20,10), subplot_kw=dict(projection='3d'))
     fig.suptitle('Tria A2C model predictions', fontsize=10)
     n=0
@@ -97,11 +97,12 @@ def plots_3d(obs,acv,color):
                     hspace=0.158)           
     plt.show()
 
-def plotPredictions(rws, obs, acv, color):
-    rows, cols = 2, 2
+def plotPredictions(rws, obs, acv, color, _rows, _cols):
+    rows, cols = _rows, _cols
+
     fig, ax = plt.subplots(nrows=rows,ncols=cols, figsize=(20,10))
     fig.suptitle('Tria A2C model predictions learning trend', fontsize=10)
-    x = np.arange(0, 100, dtype=int)
+    x = np.arange(0, len(rws[0]), dtype=int)
     n=0
     for row in range(rows):
         for col in range(cols):
