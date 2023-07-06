@@ -178,7 +178,7 @@ def plotAnimation(obs):
 
 # Creating the Animation object
     ani = animation.FuncAnimation(
-    fig, update_lines, num_steps, fargs=(walks, lines), interval=100)
+    fig, update_lines, num_steps, fargs=(walks, lines), interval=25)
 
     plt.show()
 

@@ -74,9 +74,9 @@ env_s.close()
 
 print('* * * Tria A2C model for tria 3D environment predictions * * *')
 
-episodes=4
-rows =2
-cols =2
+episodes=12
+rows =3
+cols =4
 
 plot_scores= [[0] * episodes for i in range(2)]
 plot_mean_scores=[[0] * episodes for i in range(2)]
