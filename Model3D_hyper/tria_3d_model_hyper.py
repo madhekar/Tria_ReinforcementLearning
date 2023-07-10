@@ -29,7 +29,7 @@ import tria_rl
 
 env_name = 'tria_rl/TriaClimate-v0'
 
-n_trials = 125
+n_trials = 500 # 125
 
 n_jobs = 1
 
@@ -99,11 +99,11 @@ def tria_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
     if (net_arch == "tiny"): 
         net_arch = {"pi": [64], "vf": [64]} 
     elif net_arch == "small":
-        net_arch = {"pi": [64, 64], "vf": [400, 300]}
+        net_arch = {"pi": [64, 64], "vf": [64, 64]}
     elif net_arch == "mid":
-        net_arch = {"pi":[64, 64, 64], "vf":[400, 300, 300]}
+        net_arch = {"pi":[64, 64, 64], "vf":[64, 64, 64]}
     else:
-        net_arch = {"pi":[64,64,64,64], "vf":[400,400,300,300]}   
+        net_arch = {"pi":[64,64,64,64], "vf":[64,64,64,64]}   
      
     # activation / non-linearity selection 
     activation_fn = {
@@ -223,7 +223,12 @@ try:
 except KeyboardInterrupt:
     pass
 
+pruned_trials = [t for t in study.trials if t.state == optuna.trial.TrialState.PRUNED]
+complete_trials = [t for t in study.trials if t.state == optuna.trial.TrialState.COMPLETE]
+
 print("Number of finished trials: ", len(study.trials))
+print("Number of Pruned trials: ", len(pruned_trials))
+print("Number of complete trials: ", len(complete_trials))
 
 print("Best trial:")
 trial = study.best_trial

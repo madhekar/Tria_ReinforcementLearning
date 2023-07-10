@@ -4,6 +4,7 @@ import numpy as np
 import gym
 from gym import Env
 import torch as th
+import torch.nn as nn
 
 from stable_baselines3 import A2C
 from stable_baselines3.common.evaluation import evaluate_policy
@@ -68,16 +69,19 @@ log_path = os.path.join('train', 'log')
 
 model = A2C(policy = "MlpPolicy",
             env = env_s,
-            gae_lambda = 0.89,#0.8979709455838538,#1.0, #0.117120962797502,
+            gae_lambda = 0.95,#0.89,#0.8979709455838538,#1.0, #0.117120962797502,
             gamma =  0.995,#0.9657236425464014,#0.99,#0.80, #0.0016248762308103,
             learning_rate = 0.0007,#1.0767603107498563e-08,#0.0007,#1.7072936513375555e-01,
             max_grad_norm = 0.88,#4.565654908777005,#0.5,
-            n_steps = 100,#8,
-            vf_coef = 0.51,#0.0024435757218033904,#0.5, # 0.00200901228628941,
-            ent_coef = 1.0976520036433521e-08,#0.04553259441269758,#0.0,
+            n_steps = 16,#100,#8,
+            vf_coef = 0.38,#0.51,#0.0024435757218033904,#0.5, # 0.00200901228628941,
+            ent_coef = 0.00037,#1.0976520036433521e-08,#0.04553259441269758,#0.0,
             policy_kwargs=dict(
+            activation_fn = nn.relu,  
+            net_arch = {'pi':[64, 64], 'vf':[64, 64]},  
             log_std_init=-2, 
-            ortho_init=False),
+            ortho_init=False
+            ),
             normalize_advantage=False,
             rms_prop_eps=1e-07, 
             use_rms_prop= True,
@@ -85,7 +89,9 @@ model = A2C(policy = "MlpPolicy",
             verbose=1,
             tensorboard_log=log_path)
 
-model.learn(total_timesteps=30000000, callback=HyperParameterCallback())
+
+
+model.learn(total_timesteps=50000000, callback=HyperParameterCallback())
 
 tria_a2c_model_path = os.path.join('train','save', "tria_a2c_normalized")
 
