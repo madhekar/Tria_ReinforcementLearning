@@ -77,7 +77,7 @@ model = A2C(policy = "MlpPolicy",
             vf_coef = 0.38,#0.51,#0.0024435757218033904,#0.5, # 0.00200901228628941,
             ent_coef = 0.00037,#1.0976520036433521e-08,#0.04553259441269758,#0.0,
             policy_kwargs=dict(
-            activation_fn = nn.relu,  
+            activation_fn = nn.ReLU,  
             net_arch = {'pi':[64, 64], 'vf':[64, 64]},  
             log_std_init=-2, 
             ortho_init=False
