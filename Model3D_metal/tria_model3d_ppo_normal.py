@@ -121,7 +121,7 @@ model = PPO(
         )
 
 
-model.learn(total_timesteps=5000000, callback=HyperParameterCallback())
+model.learn(total_timesteps=50000000, callback=HyperParameterCallback())
 
 tria_ppo_model_path = os.path.join('train','save', "tria_ppo_normalized")
 
