@@ -16,7 +16,8 @@ from gym.spaces import Discrete, Dict, Box
 from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.logger import HParam
 
-from helper import plots_norm, plots_3d, plotPredictions, plotAnimation
+from helper import plots_3d, plotPredictions, plotAnimation
+
 
 import tria_rl
 env_id = 'tria_rl/TriaClimate-v0'
@@ -74,23 +75,21 @@ env_s.close()
 
 print('* * * Tria A2C model for tria 3D environment predictions * * *')
 
-episodes=12
-rows =3
-cols =4
+episodes=4
+rows =2
+cols =2
 
-plot_scores= [[0] * episodes for i in range(2)]
-plot_mean_scores=[[0] * episodes for i in range(2)]
-#act_obs_clr =[[0]* episodes, [[]]* episodes, [''] * episodes]
 acts = []
 obss = []
 clrss = []
 rwds = [] 
+game = 0
 for episode in range(0, episodes):
     observation = env_s.reset()
     terminated = False
     score = 0
     norm_score=0
-    game=0
+    #game=0
     act=[]
     obs=[]
     clrs=[]
@@ -110,14 +109,6 @@ for episode in range(0, episodes):
         rwd.append(r)
         print('E: {} O: {} A: {} AE: {} R: {}'.format( episode, [str(round(o,2)) for o in ob], action.tolist()[0], actions[action.tolist()[0]], r))
     print('Model Name: {} Episone:{} Score:{}'.format( "tria_a2c_normalized", episode, score))
-    
-    mean_norm_score = norm_score / game
-    mean_score = score / game
-    plot_scores[0][episode] =  score 
-    plot_mean_scores[0][episode] = mean_score 
-
-    plot_scores[1][episode] =  norm_score 
-    plot_mean_scores[1][episode] = mean_norm_score 
 
     acts.append(act)
     obss.append(obs)
@@ -128,7 +119,7 @@ for episode in range(0, episodes):
 env_s.close() 
 
 print('------------------------------------------------------------------')
-#print('>>', len(rwds[0]))
+
 plots_3d(np.array(obss),acts,clrss, rows, cols)
 plotPredictions(rwds, obs, acts, clrss, rows, cols)
 plotAnimation(obss[3])

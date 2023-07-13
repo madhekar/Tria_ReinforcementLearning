@@ -14,7 +14,7 @@ from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.logger import HParam
 
-from helper import plots_norm
+from realtime_helper import plot
 
 class HyperParameterCallback(BaseCallback):
     """
@@ -91,7 +91,7 @@ model = A2C(policy = "MlpPolicy",
 
 
 
-model.learn(total_timesteps=50000000, callback=HyperParameterCallback())
+model.learn(total_timesteps=50, callback=HyperParameterCallback())
 
 tria_a2c_model_path = os.path.join('train','save', "tria_a2c_normalized")
 
@@ -108,34 +108,32 @@ env_s.close()
 print('* * * Tria A2C model for tria 3D environment predictions * * *')
 
 episodes=1000
-plot_scores= [[0] * episodes for i in range(2)]
-plot_mean_scores=[[0] * episodes for i in range(2)]
+plot_scores= []
+plot_mean_scores=[]
+score = 0
+game=0
+total_score=0
 for episode in range(1, episodes):
     observation = env_s.reset()
     terminated = False
     score = 0
     norm_score=0
-    game=0
     while not terminated:
         #env.render()
         action, _ = model.predict(observation, deterministic=True)
         observation, norm_reward, terminated , info = env_s.step(action)
-        norm_score += norm_reward
-        score +=env_s.get_original_reward()
+        norm_score = norm_reward
+        score =env_s.get_original_reward()
         game +=1
+
+        plot_scores.append(score)
+        total_score += score
+        mean_score = total_score / game
+        plot_mean_scores.append(mean_score)
+        plot(plot_scores, plot_mean_scores)
         print('norm_obs: {} observation: {} action: {} norm reward: {} reward: {}'.format(observation, env_s.get_original_obs(), action, norm_reward, env_s.get_original_reward()));
     print('Model Name: {} Episone:{} Score:{}'.format( "tria_a2c_normalized", episode, score))
-    mean_norm_score = norm_score / game
-    mean_score = score / game
-    plot_scores[0][episode] =  score 
-    plot_mean_scores[0][episode] = mean_score 
-
-    plot_scores[1][episode] =  norm_score 
-    plot_mean_scores[1][episode] = mean_norm_score 
 
 env_s.close() 
 
 print('------------------------------------------------------------------')
-
-
-plots_norm(plot_scores, plot_mean_scores)
