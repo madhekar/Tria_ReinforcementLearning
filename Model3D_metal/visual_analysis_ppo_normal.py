@@ -7,7 +7,7 @@ from gym import Env
 import torch as th
 
 from copy import deepcopy
-from stable_baselines3 import A2C
+from stable_baselines3 import PPO
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 from stable_baselines3.common.env_util import make_vec_env
@@ -46,9 +46,9 @@ env_s = VecNormalize(env_s, training=True, norm_obs=True, norm_reward=True, epsi
 
 log_path = os.path.join('train', 'log')
 
-tria_a2c_model_path = os.path.join('train','save', "tria_a2c_normalized")
+tria_ppo_model_path = os.path.join('train','save', "tria_ppo_normalized")
 
-model = A2C.load(tria_a2c_model_path, env=env_s)
+model = PPO.load(tria_ppo_model_path, env=env_s)
 
 #evaluate_policy(model, env_s, n_eval_episodes=20, render=False)
 
@@ -76,7 +76,7 @@ for episode in range(0, episodes):
     while not terminated:        
         ob = env_s.get_original_obs().ravel().tolist()
         obs.append(ob)
-        action, _ = model.predict(observation, deterministic=True)
+        action, _ = model.predict(observation, deterministic=False)
         observation, norm_reward, terminated , info = env_s.step(action)
         norm_score += norm_reward
         score +=env_s.get_original_reward()
@@ -86,7 +86,7 @@ for episode in range(0, episodes):
         r = env_s.get_original_reward().tolist()[0]
         rwd.append(r)
         print('E: {} O: {} A: {} R: {}'.format( episode, [str(round(o,2)) for o in ob], action.tolist()[0], r))
-    print('Model Name: {} Episone:{} Score:{}'.format( "tria_a2c_normalized", episode, score))
+    print('Model Name: {} Episone:{} Score:{}'.format( "tria_ppo_normalized", episode, score))
 
     acts.append(act)
     obss.append(obs)
