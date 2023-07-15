@@ -101,10 +101,10 @@ class Agent():
             state = T.tensor(np.array(observation),dtype=T.float).to(self.q_eval.device)
             _, advantage = self.q_eval.forward(state)
             action = T.argmax(advantage).item()
-            print('>>>advantage: {} action: {}'.format(advantage, action))
+            #print('>>>advantage: {} action: {}'.format(advantage, action))
         else:
             action = np.random.choice(self.action_space)
-            print('>>>random action: {}'.format(action))
+            #print('>>>random action: {}'.format(action))
 
         return action
 
