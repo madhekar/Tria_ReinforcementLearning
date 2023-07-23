@@ -23,9 +23,9 @@ env_id = 'tria_rl/TriaClimate-v0'
 env_s = gym.make(env_id)
 
 def getColor (reward):
-    if reward <=30 and reward >= 10:
+    if reward <=300 and reward >= 100:
         return 'green'
-    elif reward < 10 and reward > -10:
+    elif reward < 100 and reward > 0:
         return 'blue'
     else: 
         return 'red'

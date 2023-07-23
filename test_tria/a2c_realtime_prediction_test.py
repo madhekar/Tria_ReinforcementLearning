@@ -60,7 +60,7 @@ for episode in range(1, episodes):
     norm_score=0
     while not terminated:
         #env.render()
-        action, _ = model.predict(observation, deterministic=True)
+        action, _ = model.predict(observation, deterministic=False)
         observation, norm_reward, terminated , info = env_s.step(action)
         score =env_s.get_original_reward()
         game +=1
