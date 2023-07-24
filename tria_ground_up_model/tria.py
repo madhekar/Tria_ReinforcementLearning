@@ -14,7 +14,7 @@ if __name__ == '__main__':
     load_checkpoint = False
 
     agent = Agent(gamma=0.99, epsilon=1.0, lr=5e-4,
-                  input_dims=[3], n_actions=19, mem_size=1000000, eps_min=0.01,
+                  input_dims=[3], n_actions=6, mem_size=1000000, eps_min=0.01,
                   batch_size=64, eps_dec=1e-3, replace=100)
 
     if load_checkpoint:
