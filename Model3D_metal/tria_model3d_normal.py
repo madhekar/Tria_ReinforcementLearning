@@ -110,6 +110,7 @@ print('* * * Tria A2C model for tria 3D environment predictions * * *')
 episodes=1000
 plot_scores= []
 plot_mean_scores=[]
+actions=[]
 score = 0
 game=0
 total_score=0
@@ -127,10 +128,11 @@ for episode in range(1, episodes):
         game +=1
 
         plot_scores.append(score)
+        actions.append(action)
         total_score += score
         mean_score = total_score / game
         plot_mean_scores.append(mean_score)
-        plot(plot_scores, plot_mean_scores)
+        plot(plot_scores, plot_mean_scores, actions)
         print('norm_obs: {} observation: {} action: {} norm reward: {} reward: {}'.format(observation, env_s.get_original_obs(), action, norm_reward, env_s.get_original_reward()));
     print('Model Name: {} Episone:{} Score:{}'.format( "tria_a2c_normalized", episode, score))
 
