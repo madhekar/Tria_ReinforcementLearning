@@ -38,6 +38,8 @@ log_path = os.path.join('test', 'log')
 
 tria_a2c_model_path = os.path.join('test','model', 'tria_a2c_normalized')
 
+print('loading tranined model at: ', tria_a2c_model_path)
+
 model = A2C.load(tria_a2c_model_path, env=env_s)
 
 evaluate_policy(model, env_s, n_eval_episodes=20, render=False)
@@ -62,7 +64,7 @@ for episode in range(1, episodes):
         #env.render()
         action, _ = model.predict(observation, deterministic=True)
         observation, norm_reward, terminated , info = env_s.step(action)
-        score =env_s.get_original_reward()
+        score =  env_s.get_original_reward()
         game +=1
 
         actions.append(action)
@@ -72,6 +74,7 @@ for episode in range(1, episodes):
         plot_mean_scores.append(mean_score)
         plot(plot_scores, plot_mean_scores, actions)
         print('norm_obs: {} observation: {} action: {} norm reward: {} reward: {}'.format(observation, env_s.get_original_obs(), action, norm_reward, env_s.get_original_reward()));
+        #print('norm_obs: {} action: {} reward: {}'.format(observation, action, norm_reward));
     print('Model Name: {} Episone:{} Score:{}'.format( "tria_a2c_normalized", episode, score))
 
 env_s.close() 
