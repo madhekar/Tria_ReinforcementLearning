@@ -13,8 +13,8 @@ if __name__ == '__main__':
     num_games = 1000
     load_checkpoint = False
 
-    agent = Agent(gamma=0.99, epsilon=1.0, lr=5e-4,
-                  input_dims=[3], n_actions=6, mem_size=1000000, eps_min=0.01,
+    agent = Agent(gamma=0.99, epsilon=1.0, lr=5e-3,
+                  input_dims=[3], n_actions=6, mem_size=10000000, eps_min=0.01,
                   batch_size=64, eps_dec=1e-3, replace=100)
 
     if load_checkpoint:

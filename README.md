@@ -7,4 +7,4 @@
 
 
 ### Working realtime prediction simulation of Tria A2C model Aug 1 2023
-https://github.com/madhekar/Tria_ReinforcementLearning/doc/Tria_agent.MOV                                                                                                                                                                                           
+                                                                                        
