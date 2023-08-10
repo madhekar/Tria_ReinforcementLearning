@@ -1,4 +1,5 @@
-import gym
+#import gym
+import gymnasium as gym
 import numpy as np
 from dueling_ddqn_torch import Agent
 from tools import plotLearning
@@ -32,11 +33,13 @@ if __name__ == '__main__':
     total_score = 0
     for i in range(num_games):
         done = False
-        observation = env.reset()
+        truncate = False
+        observation,_ = env.reset()
         score = 0
         while not done:
             action = agent.choose_action(observation)
-            observation_, reward, done, info = env.step(action)
+            observation_, reward, done,truncate, info = env.step(action)
+            #print('>>', observation, observation_)
             score += reward
             #game += 1
             agent.store_transition(observation, action, reward, observation_, int(done))

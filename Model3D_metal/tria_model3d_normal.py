@@ -51,6 +51,7 @@ import tria_rl
 env_id = 'tria_rl/TriaClimate-v0'
 env_s = gym.make(env_id)
 
+
 print('---- observation space attributes ----')
 print('observation space size:   ',env_s.observation_space.shape[0])
 print('observation space sample: ',env_s.observation_space.sample)
@@ -91,7 +92,7 @@ model = A2C(policy = "MlpPolicy",
 
 
 
-model.learn(total_timesteps=90000000, callback=HyperParameterCallback())
+model.learn(total_timesteps=90, callback=HyperParameterCallback())
 
 tria_a2c_model_path = os.path.join('train','save', "tria_a2c_normalized")
 
@@ -107,7 +108,7 @@ env_s.close()
 
 print('* * * Tria A2C model for tria 3D environment predictions * * *')
 
-episodes=1000
+episodes=100
 plot_scores= []
 plot_mean_scores=[]
 actions=[]
@@ -117,6 +118,7 @@ total_score=0
 for episode in range(1, episodes):
     observation = env_s.reset()
     terminated = False
+    truncated = False
     score = 0
     norm_score=0
     while not terminated:

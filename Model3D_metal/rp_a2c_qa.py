@@ -3,7 +3,6 @@ import gym
 from stable_baselines3 import A2C
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 
-
 import tria_rl
 env_id = 'tria_rl/TriaClimate-v0'
 env_s = gym.make(env_id)
@@ -34,6 +33,7 @@ episodes=4
 for episode in range(0, episodes):
     observation = env_s.reset()
     terminated = False
+    itruncated = False 
     score = 0
     norm_score=0
     while not terminated:        

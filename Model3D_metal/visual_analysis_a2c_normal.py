@@ -3,6 +3,8 @@ import numpy as np
 import random
 import csv
 import gym
+import shimmy
+#import gymnasium as gym
 from gym import Env
 import torch as th
 
@@ -67,6 +69,7 @@ rwds = []
 for episode in range(0, episodes):
     observation = env_s.reset()
     terminated = False
+    truncated = False
     score = 0
     norm_score=0
     act=[]
@@ -77,7 +80,7 @@ for episode in range(0, episodes):
         ob = env_s.get_original_obs().ravel().tolist()
         obs.append(ob)
         action, _ = model.predict(observation, deterministic=True)
-        observation, norm_reward, terminated , info = env_s.step(action)
+        observation, norm_reward, terminated ,  info = env_s.step(action)
         norm_score += norm_reward
         score +=env_s.get_original_reward()
 
