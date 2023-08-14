@@ -1,5 +1,5 @@
-#import gym
-import gymnasium as gym
+import gym
+#import gymnasium as gym
 import numpy as np
 from dueling_ddqn_torch import Agent
 from tools import plotLearning

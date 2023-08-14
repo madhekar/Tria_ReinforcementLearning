@@ -64,7 +64,7 @@ print('action space sample: ', env_s.action_space.sample())
 
 env_s = DummyVecEnv([lambda: env_s])
 
-env_s = VecNormalize(env_s, training=True, norm_obs=True, norm_reward=True, epsilon=1e-08, gamma=0.99)
+#env_s = VecNormalize(env_s, training=True, norm_obs=True, norm_reward=True, epsilon=1e-08, gamma=0.99)
 
 log_path = os.path.join('train', 'log')
 
@@ -79,7 +79,7 @@ model = A2C(policy = "MlpPolicy",
             ent_coef = 1.185e-08,#0.00294,#3.11e-06,#0.00037,#1.0976520036433521e-08,#0.04553259441269758,#0.0,
             policy_kwargs=dict(
             activation_fn = nn.Tanh,  
-            net_arch = {'pi':[64, 64, 64], 'vf':[64, 64, 64]},  
+            net_arch = {'pi':[128, 128, 128], 'vf':[128, 128, 128]},  
             log_std_init=-2, 
             ortho_init=False
             ),

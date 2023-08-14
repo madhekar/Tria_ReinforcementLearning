@@ -14,35 +14,37 @@ class tria_inference_engine():
         self.model_name = model_name
         self.model_path = os.path.join(root_path, model_path, model_name)
         self.log_path = os.path.join(root_path, log_path) 
-        self.env = None
         self.model = None
 
     def loadEnvironment(self):
-        self.env = gym.make(self.env_id)
+        env_raw = gym.make(self.env_id)
+        return env_raw
 
-    def loadNormalizedEnv(self):    
-        self.env = DummyVecEnv([lambda: self.env])
-        self.env = VecNormalize(self.env, training=True, norm_obs=True, norm_reward=True, epsilon=1e-08, gamma=0.99)
-
-    def showEnvionmentProperties(self):
+    def loadNormalizedEnv(self, env):    
+        env_vec = DummyVecEnv([lambda: env])
+        env_norm = VecNormalize(env_vec, training=True, norm_obs=True, norm_reward=True, epsilon=1e-08, gamma=0.99)
+        return env_norm
+    
+    def showEnvionmentProperties(self, env):
         print('* * * Tria Enviromnet for tria device controll predictions * * *')
-        print('>> observation space size:   ',self.env.observation_space.shape[0])
-        print('>> observation space sample: ',self.env.observation_space.sample)
-        print('>> action space:             ', self.env.action_space)
-        print('>> action space sample:      ', self.env.action_space.sample())    
+        print('>> observation space size:   ',env.observation_space.shape[0])
+        print('>> observation space sample: ',env.observation_space.sample)
+        print('>> action space:             ',env.action_space)
+        print('>> action space sample:      ',env.action_space.sample())    
 
-    def loadModel(self):
-     self.model = A2C.load(self.model_path, env=self.env)
-     self.env.close()
+    def loadModel(self, env):
+     self.model = A2C.load(self.model_path, env=env)
 
-    def getActionPrediction(self, obs):
-       #obs= np.array(obs, dtype=np.float32)
-       print('original observation: ', obs)
-       #observation_api = self.env.normalize_obs(obs)  
-       #print('normalized observation', obs)
-       action_o = self.model.predict(obs, deterministic=True)[0]
-       print(action_o)
-       return action_o
+    def getActionPrediction(self, env, obs):
+       retDict = {}
+       obs = np.array([obs])
+       print('>>orig obs:', obs)
+       observation_api = env.normalize_obs(obs)  
+       print('>>norm obs:', observation_api)
+       action_o = self.model.predict(observation_api, deterministic=True)[0]
+       retDict['action'] = action_o.item()
+       print('>>action  :',retDict)
+       return retDict
 
 
 if __name__ == '__main__':
@@ -53,14 +55,12 @@ if __name__ == '__main__':
                                 'TriaClimate-v0',
                                 'tria_a2c_normalized'
                                 )
-   tie.loadEnvironment()
+   env_r = tie.loadEnvironment()
 
-   tie.showEnvionmentProperties()
+   tie.showEnvionmentProperties(env_r)
 
-   tie.loadNormalizedEnv()
+   env_n = tie.loadNormalizedEnv(env_r)
 
-   tie.loadModel()
+   tie.loadModel(env_n)
 
-   
-
-   print('action: ', tie.getActionPrediction(np.array([59.78,57.89,20.976], dtype=np.float32))[0] )
+   print('action: ', tie.getActionPrediction(env_n, np.array([[59.78,57.89,20.976]], dtype=np.float32)) )

@@ -1,5 +1,6 @@
 import os
 import gym
+import numpy as np
 from stable_baselines3 import A2C
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 import tria_rl
@@ -16,20 +17,21 @@ print('action space sample:      ', env_s.action_space.sample())
 
 env_s = DummyVecEnv([lambda: env_s])
 
-env_s = VecNormalize(env_s, training=True, norm_obs=True, norm_reward=True, epsilon=1e-08, gamma=0.99)
+env_n = VecNormalize(env_s, training=True, norm_obs=True, norm_reward=True, epsilon=1e-08, gamma=0.99)
 
 log_path = os.path.join('../', 'logs')
 
 tria_a2c_model_path = os.path.join('../','model', "tria_a2c_normalized")
 
-model = A2C.load(tria_a2c_model_path, env=env_s)
+model = A2C.load(tria_a2c_model_path, env=env_n)
 
 #
-observation_o = env_s.reset()
-ob = env_s.get_original_obs().ravel().tolist()
-observation_api = env_s.normalize_obs(ob)
-action_o = model.predict(observation_o, deterministic=True)
-print('norm obs: {} unnorm obs: {} apinorm obs: {} action: {}'.format(observation_o, ob, observation_api, action_o))
+#observation_o = env_s.reset()
+observation_ext = np.array( (4.,  5., 6.)) 
+#ob =  env_s.get_original_obs().ravel().tolist()
+observation_api = env_n.normalize_obs(observation_ext).ravel().tolist()
+action_o = model.predict(observation_api, deterministic=True)
+print('unnorm obs: {} apinorm obs: {} action: {}'.format(observation_ext, observation_api, action_o))
 #
 env_s.close() 
 

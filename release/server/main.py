@@ -13,15 +13,14 @@ e = tie('Tria Inference Engine',
                                 'TriaClimate-v0',
                                 'tria_a2c_normalized'
                                 )
-e.loadEnvironment()
+env_r = e.loadEnvironment()
 
-e.showEnvionmentProperties()
+e.showEnvionmentProperties(env_r)
 
-e.loadNormalizedEnv()
+env_n = e.loadNormalizedEnv(env_r)
 
-e.loadModel()
+e.loadModel(env_n)
 
 @tapp.get('/action')
 async def getAction(query: List[float] = Query(...)):
-   e.getActionPrediction(query)
-   return query
+   return e.getActionPrediction(env_n, query)
