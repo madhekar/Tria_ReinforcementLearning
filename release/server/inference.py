@@ -23,13 +23,19 @@ log_path = os.path.join('../', 'logs')
 
 tria_a2c_model_path = os.path.join('../','model', "tria_a2c_normalized")
 
-model = A2C.load(tria_a2c_model_path, env=env_n)
+tria_env_path = os.path.join('../','model', "tria_env_normalized")
+
+env = VecNormalize.load(tria_env_path, env_n)
+
+
+model = A2C.load(tria_a2c_model_path, env=env)
 
 #
 #observation_o = env_s.reset()
-observation_ext = np.array( (4.,  5., 6.)) 
+observation_ext = np.array( [40.,  55., 69.], dtype=np.float32) 
 #ob =  env_s.get_original_obs().ravel().tolist()
-observation_api = env_n.normalize_obs(observation_ext).ravel().tolist()
+observation_api = env.normalize_obs(obs=observation_ext)
+#observation_api = env_n.normalize_obs(observation_ext)#.ravel().tolist()
 action_o = model.predict(observation_api, deterministic=True)
 print('unnorm obs: {} apinorm obs: {} action: {}'.format(observation_ext, observation_api, action_o))
 #

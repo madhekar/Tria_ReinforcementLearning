@@ -64,7 +64,7 @@ print('action space sample: ', env_s.action_space.sample())
 
 env_s = DummyVecEnv([lambda: env_s])
 
-#env_s = VecNormalize(env_s, training=True, norm_obs=True, norm_reward=True, epsilon=1e-08, gamma=0.99)
+env_s = VecNormalize(env_s, training=True, norm_obs=True, norm_reward=True, epsilon=1e-08, gamma=0.99)
 
 log_path = os.path.join('train', 'log')
 
@@ -91,12 +91,16 @@ model = A2C(policy = "MlpPolicy",
             tensorboard_log=log_path)
 
 
+# learn A2C model
+model.learn(total_timesteps=200000, callback=HyperParameterCallback())
 
-model.learn(total_timesteps=90, callback=HyperParameterCallback())
-
+# save model at the path
 tria_a2c_model_path = os.path.join('train','save', "tria_a2c_normalized")
-
 model.save(tria_a2c_model_path)
+
+# save normalized environment at the path
+tria_norm_env_path = os.path.join('train','save', "tria_env_normalized")
+env_s.save(tria_norm_env_path)
 
 del model
 
