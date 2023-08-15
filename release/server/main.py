@@ -6,21 +6,19 @@ from tria_inference import tria_inference_engine as tie
 
 tapp = FastAPI()
 
-
 e = tie('Tria Inference Engine',
-                                'TIE serves prediction requests',
-                                'tria_rl',
-                                'TriaClimate-v0',
-                                'tria_a2c_normalized'
-                                )
+        'TIE serves prediction requests',
+        'tria_rl',
+        'TriaClimate-v0',
+        'tria_a2c_normalized'
+         )
+
 env_r = e.loadEnvironment()
-
 e.showEnvionmentProperties(env_r)
-
 env_n = e.loadNormalizedEnv(env_r)
+env_with_stats = e.loadEnvAndModel(env_n)
 
-e.loadModel(env_n)
-
+# request action for set of observations
 @tapp.get('/action')
 async def getAction(query: List[float] = Query(...)):
-   return e.getActionPrediction(env_n, query)
+   return e.getActionPrediction(env_with_stats, query)
