@@ -79,7 +79,7 @@ model = A2C(policy = "MlpPolicy",
             ent_coef = 1.185e-08,#0.00294,#3.11e-06,#0.00037,#1.0976520036433521e-08,#0.04553259441269758,#0.0,
             policy_kwargs=dict(
             activation_fn = nn.Tanh,  
-            net_arch = {'pi':[128, 128, 128], 'vf':[128, 128, 128]},  
+            net_arch = {'pi':[64, 64], 'vf':[64, 64]},  
             log_std_init=-2, 
             ortho_init=False
             ),
@@ -92,7 +92,7 @@ model = A2C(policy = "MlpPolicy",
 
 
 # learn A2C model
-model.learn(total_timesteps=200000, callback=HyperParameterCallback())
+model.learn(total_timesteps=90000000, callback=HyperParameterCallback())
 
 # save model at the path
 tria_a2c_model_path = os.path.join('train','save', "tria_a2c_normalized")
