@@ -16,8 +16,9 @@ if __name__ == '__main__':
                     #time.sleep(0.1) #wait for tria to answer
                     while tria.inWaiting()==0: pass
                     if  tria.inWaiting()>0: 
-                        answer=tria.readline()
-                        print(answer)
+                        observations=tria.readline()
+                        print(observations)
                         tria.flushInput() #remove data after reading
+                        
             except KeyboardInterrupt:
                 print("KeyboardInterrupt has been caught.")
