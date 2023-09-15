@@ -20,13 +20,17 @@ if __name__ == '__main__':
             try:
                 while True:
                     while tria.inWaiting()==0: pass
-                    if  tria.inWaiting()>0: 
+                    if  tria.inWaiting()>0:
                         observations=tria.readline().decode('utf-8').rstrip()
-                        print('observation: ',observations)
+                        #print('observation: ',observations)
                         tria.flushInput() #remove data after reading
-                        obs = observations.split(':')
-                        action = RPL.getAction(obs[0],obs[1],obs[2])
-                        print('action: ', action)
-                        tria.write(action)
+                        if observations.startswith(">"):
+                           print("Debug Msg: " + observations);
+                        else:
+                           obs = observations.split(':')
+                           print("obs: ", obs)
+                           action = rpl.getAction(t=float(obs[0]),h=float(obs[1]),a=float(obs[2]))
+                           print('action: ', action)
+                           tria.write(bytes(str(action), 'UTF-8'))
             except KeyboardInterrupt:
                 print("KeyboardInterrupt has been caught.")
