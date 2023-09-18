@@ -37,11 +37,9 @@ class tria_inference_engine():
     
     def showEnvionmentProperties(self, env):
         print('----------------------------------------------------------------')
-        print('----- Tria Enviromnet for tria device controll predictions -----')
+        print('-- Tria Enviromnet for tria device controll predictions --------')
         print('-- observation space size:   ',env.observation_space.shape[0])
-        print('-- observation space sample: ',env.observation_space.sample)
         print('-- action space:             ',env.action_space)
-        print('-- action space sample:      ',env.action_space.sample())    
         print('----------------------------------------------------------------')
 
     def loadEnvAndModel(self, env):

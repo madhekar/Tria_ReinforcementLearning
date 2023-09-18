@@ -6,6 +6,7 @@ from tria_inference import tria_inference_engine as tie
 
 tapp = FastAPI()
 
+# instance of tria interface engine class
 e = tie('Tria Inference Engine',
         'TIE serves prediction requests',
         'tria_rl',
@@ -13,9 +14,13 @@ e = tie('Tria Inference Engine',
         'tria_a2c_normalized'
          )
 
+# load tria environment
 env_r = e.loadEnvironment()
+# display current environment variables and properties.
 e.showEnvionmentProperties(env_r)
+# convert to trined normalized environment
 env_n = e.loadNormalizedEnv(env_r)
+# load model for the environment 
 env_with_stats = e.loadEnvAndModel(env_n)
 
 # request action for set of observations
