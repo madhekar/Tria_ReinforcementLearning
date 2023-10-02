@@ -22,12 +22,11 @@ if __name__ == '__main__':
                     while tria.inWaiting()==0: pass
                     if  tria.inWaiting()>0:
                         observations=tria.readline().decode('utf-8').rstrip()
-                        #print('observation: ',observations)
                         tria.flushInput() #remove data after reading
-                        if observations.startswith(">"):
+                        if observations.startswith(">"):  #arduino sent debug message to display begins with >
                            print("Debug Msg: " + observations);
                         else:
-                           obs = observations.split(':')
+                           obs = observations.split(':') # obserations are tokenized with : charactor
                            print("obs: ", obs)
                            action = rpl.getAction(t=float(obs[0]),h=float(obs[1]),a=float(obs[2]))
                            print('action: ', action)
