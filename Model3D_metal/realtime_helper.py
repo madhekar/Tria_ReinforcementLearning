@@ -5,14 +5,14 @@ import numpy as np
 import warnings
 warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning) 
 plt.ion()
-
+# plot real time reward change
 def plot(scores, mean_scores, actions):
     display.clear_output(wait=True)
     display.display(plt.gcf())
     plt.clf()
     plt.title('Training Test...')
     plt.xlabel('Number of Episode/ steps')
-    plt.ylabel('Reward')
+    plt.ylabel('Rewards')
     plt.plot(scores)
     plt.plot(mean_scores)
     plt.plot(actions)
