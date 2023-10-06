@@ -1,0 +1,15 @@
+[Unit]
+Description=reinforcement model serviing service for tria
+After=network.target
+
+[Service]
+Type=idle
+
+User=root
+ExecStart=/usr/bin/python /home/bmadhekar/work/release/server/main.py
+
+Restart=always
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target

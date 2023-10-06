@@ -6,7 +6,7 @@ After=network.target
 Type=idle
 
 User=root
-ExecStart=/usr/bin/python /home/bmadhekar/work/release/server/main.py
+ExecStart=/usr/bin/python /home/bmadhekar/work/release/communicator/tria_communicator.py
 
 Restart=always
 RestartSec=60
