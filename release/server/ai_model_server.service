@@ -3,10 +3,12 @@ Description=reinforcement model serviing service for tria
 After=network.target
 
 [Service]
-Type=idle
+Type=notify
 
-User=root
-ExecStart=/usr/bin/python /home/bmadhekar/work/release/server/main.py
+User=bmadhekar
+Group=bmadhekar
+WorkingDirectory=/home/bmadhekar/work/release/server/
+ExecStart=/home/bmadhekar/.local/bin/uvicorn main:tapp
 
 Restart=always
 RestartSec=60

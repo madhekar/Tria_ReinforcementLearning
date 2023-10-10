@@ -3,14 +3,14 @@ Description=serial communication service with tria
 After=network.target
 
 [Service]
-Type=idle
+Type=notify
 
-User=root
+User=bmadhekar
+Group=bmadhekar
 ExecStart=/usr/bin/python /home/bmadhekar/work/release/communicator/tria_communicator.py
 
 Restart=always
 RestartSec=60
-
 
 [Install]
 WantedBy=multi-user.target
