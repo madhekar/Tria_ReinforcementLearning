@@ -6,7 +6,11 @@ import urllib3
 import json
 from rpi_communicator import RPL
 
-
+'''
+Service hosted on raspberry pi to communicate with Tria device on serial interface.
+This service also communicates with reinforcement model instance by providing
+current sensor observations and receives an action.
+'''
 if __name__ == '__main__':
     baseUrl = 'http://127.0.0.1:8000/action?'
     http = urllib3.PoolManager()

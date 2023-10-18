@@ -5,7 +5,10 @@ from stable_baselines3 import A2C
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 import tria_rl
 import logging as log
-
+'''
+reinforcement model interface, this class loads the normalized RL model in memory
+and performs prediction of an action based the observations received from the tria communicator 
+'''
 class tria_inference_engine():
     def __init__(self, 
                  name,
