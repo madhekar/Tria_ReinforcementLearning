@@ -68,6 +68,9 @@ env_s = VecNormalize(env_s, training=True, norm_obs=True, norm_reward=True, epsi
 
 log_path = os.path.join('train', 'log')
 
+'''
+define A2C model instance
+'''
 model = A2C(policy = "MlpPolicy",
             env = env_s,
             gae_lambda = 0.95,#1.0,#0.99,#0.95,#0.89,#0.8979709455838538,#1.0, #0.117120962797502,
